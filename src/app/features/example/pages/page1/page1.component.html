@@ -1,0 +1,40 @@
+<app-navbar [links]="navLinks"></app-navbar>
+<app-large-button [buttonText]="'Click Me!'" (buttonClick)="handleButtonClick()"></app-large-button>
+<app-small-button [buttonText]="'Click Me!'" (buttonClick)="handleButtonClick()"></app-small-button>
+<form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+
+  <div>
+    <app-text-input
+      [placeholder]="'Enter your phone number'"
+      formControlName="name"
+    ></app-text-input>
+<!--    <app-form-errors [control]="userForm.get('name')"></app-form-errors>-->
+  </div>
+
+  <div>
+    <app-select-input
+      [options]="[
+      { label: 'Option 1', value: 1 },
+      { label: 'Option 2', value: 2}
+      ]"
+      [placeholder]="'Please select an option...'"
+      formControlName="selectedOption"
+    ></app-select-input>
+<!--    <app-form-errors [control]="userForm.get('selectedOption')"></app-form-errors>-->
+  </div>
+
+  <div>
+    <app-text-area-input formControlName="userText" placeholder="Enter your text"></app-text-area-input>
+<!--    <app-form-errors [control]="userForm.get('userText')"></app-form-errors>-->
+  </div>
+
+  <div>
+    <app-file-input formControlName="fileUpload"></app-file-input>
+<!--    <app-form-errors [control]="userForm.get('fileUpload')"></app-form-errors>-->
+  </div>
+
+  <div>
+    <app-large-button [buttonText]="'Submit'"></app-large-button>
+  </div>
+
+</form>

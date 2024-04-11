@@ -1,0 +1,8 @@
+<button
+  (click)="onClick()"
+  class="bg-primary  border rounded-md inline-flex items-center justify-center py-3 px-7 text-center text-lg font-bold text-white  h disabled:bg-gray-300 disabled:border-gray-300 disabled:text-gray-500"
+  [disabled]="isDisabled"
+  type="submit"
+>
+  {{ buttonText }}
+</button>
