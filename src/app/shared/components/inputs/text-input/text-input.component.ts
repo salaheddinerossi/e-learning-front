@@ -17,6 +17,7 @@ import {ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR} from "@angular/for
 export class TextInputComponent implements ControlValueAccessor {
 
   @Input() placeholder: string = '';
+  @Input() inputType="text";
   inputControl = new FormControl();
 
   onChange: any = () => {};

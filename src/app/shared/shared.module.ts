@@ -10,6 +10,12 @@ import { SelectInputComponent } from './components/inputs/select-input/select-in
 import {FormsModule, ReactiveFormsModule} from "@angular/forms";
 import { FileInputComponent } from './components/inputs/file-input/file-input.component';
 import { FormErrorsComponent } from './components/form-errors/form-errors.component';
+import { MainTitleComponent } from './components/main-title/main-title.component';
+import { BreadcrumbComponent } from './components/breadcrumb/breadcrumb.component';
+import { ChapterComponent } from './components/chapter/chapter.component';
+import { MiddleTitleComponent } from './components/middle-title/middle-title.component';
+import { TruncatePipe } from './pipes/truncate.pipe';
+import { NotFoundComponent } from './components/not-found/not-found.component';
 
 
 
@@ -22,20 +28,32 @@ import { FormErrorsComponent } from './components/form-errors/form-errors.compon
     TextAreaInputComponent,
     SelectInputComponent,
     FileInputComponent,
-    FormErrorsComponent
+    FormErrorsComponent,
+    MainTitleComponent,
+    BreadcrumbComponent,
+    ChapterComponent,
+    MiddleTitleComponent,
+    TruncatePipe,
+    NotFoundComponent
   ],
-    exports: [
-        NavbarComponent,
-        LargeButtonComponent,
-        SmallButtonComponent,
-        TextInputComponent,
-        TextAreaInputComponent,
-        SelectInputComponent,
-        FileInputComponent,
-        FormErrorsComponent,
+  exports: [
+    NavbarComponent,
+    LargeButtonComponent,
+    SmallButtonComponent,
+    TextInputComponent,
+    TextAreaInputComponent,
+    SelectInputComponent,
+    FileInputComponent,
+    FormErrorsComponent,
+    MainTitleComponent,
+    BreadcrumbComponent,
+    ChapterComponent,
+    MiddleTitleComponent,
+    TruncatePipe,
+    NotFoundComponent,
 
 
-    ],
+  ],
     imports: [
         CommonModule,
         RouterLink,
