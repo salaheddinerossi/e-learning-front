@@ -1,0 +1,25 @@
+<app-navbar ></app-navbar>
+
+<div class="container mx-auto">
+  <p class="text-dark text-lg font-semibold my-10 text-center" *ngIf="loading">{{environment.loading.categoriesLoading}}</p>
+</div>
+
+<app-not-found *ngIf="!loading && categories.length === 0" [error]="error"></app-not-found>
+
+<section *ngIf="!loading && categories.length !=0" >
+  <app-main-title [mainText]="mainTitle" [subText]="environment.categoriesTitle.subText" ></app-main-title>
+
+  <div class="container mx-auto" >
+        <ul class="flex items-center mb-10">
+            <app-breadcrumb *ngIf="!isRoot" [title]="'categories'" [link]="'/categories'"  ></app-breadcrumb>
+
+            <app-breadcrumb *ngFor="let categoryName of categoryNames" [title]="categoryName.title" [link]="'/categories/'+ categoryName.id"></app-breadcrumb>
+            <app-breadcrumb *ngIf="!isRoot" [title]="mainTitle"  [isLastItem]="true" [isActive]="true" ></app-breadcrumb>
+
+        </ul>
+
+        <div class="-mx-4 flex flex-wrap">
+            <app-category *ngFor="let category of categories" [category]="category"></app-category>
+        </div>
+    </div>
+</section>

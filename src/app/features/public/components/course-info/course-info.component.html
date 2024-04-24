@@ -1,0 +1,24 @@
+<div class="flex sm:flex-row">
+  <div class="flex-1 ">
+    <img
+      src="{{courseDetails.image}}"
+      alt="image"
+      class="w-full rounded"
+    >
+  </div>
+  <div class="flex-1 ml-5">
+    <p class="text-sm text-body-color">{{courseDetails.about}}</p>
+    <p class="font-semibold text-dark text-lg mt-2">{{environment.courseTitle.requirements}}</p>
+    <p class="text-sm text-body-color">{{courseDetails.requirements}}</p>
+    <p class="font-semibold text-dark text-lg mt-2">{{environment.courseTitle.courseTags}}</p>
+    <div class="flex mt-1">
+      <app-tag [tagName]="courseDetails.languageEnum"></app-tag>
+      <app-tag [tagName]="courseDetails.courseLevelEnum"></app-tag>
+    </div>
+    <div class="flex my-2">
+      <p class="font-semibold text-dark text-lg">{{environment.courseTitle.skills +" "}}</p>
+      <h3 class=" text-dark text-lg">{{courseDetails.skillName}}</h3>
+    </div>
+    <app-large-course-button [buttonText]="'Enroll the course'" [link]="'enrollment/'+courseDetails.id"></app-large-course-button>
+  </div>
+</div>

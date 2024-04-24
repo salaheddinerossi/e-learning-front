@@ -1,0 +1,88 @@
+<app-navbar ></app-navbar>
+
+<app-not-found *ngIf="!isPageExist" [error]="error"></app-not-found>
+<div *ngIf="isPageExist" class="bg-gray-1">
+  <div class="container mx-auto">
+    <section class="py-20 lg:py-[80px]">
+      <div class="container mx-auto">
+        <div class="flex flex-wrap -mx-4">
+          <div class="w-full px-4">
+            <div
+              class="relative mx-auto max-w-[525px] overflow-hidden rounded-lg bg-white py-16 px-10  sm:px-12 md:px-[60px] "
+            >
+              <div class="mb-10 text-center md:mb-16">
+                <div
+                  class="mx-auto inline-block "
+                >
+                  <h1 class="font-bold text-xl text-dark-2">{{formOptions.title}}</h1>
+                </div>
+              </div>
+              <form [formGroup]="signUpForm" (ngSubmit)="onSubmit()">
+                <div class="mb-6 ">
+                  <app-text-input [placeholder]="'first name'" formControlName="firstName"></app-text-input>
+                  <app-form-errors [control]="signUpForm.get('firstName')!"></app-form-errors>
+                </div>
+                <div class="mb-6">
+                  <app-text-input [placeholder]="'last name'" formControlName="lastName">
+                  </app-text-input>
+                  <app-form-errors [control]="signUpForm.get('lastName')!"></app-form-errors>
+
+                </div>
+
+                <div class="mb-6 ">
+                  <app-text-input [placeholder]="'email'" formControlName="email"></app-text-input>
+                  <app-form-errors [control]="signUpForm.get('email')!"></app-form-errors>
+                </div>
+                <div class="mb-6">
+                  <app-text-input [placeholder]="'password'" [inputType]="'password'" formControlName="password">
+                  </app-text-input>
+                  <app-form-errors [control]="signUpForm.get('password')!"></app-form-errors>
+
+                </div>
+
+                <div *ngIf="user == 'teacher'" class="mb-6">
+                  <app-text-input [placeholder]="'phone Number'" formControlName="phoneNumber">
+                  </app-text-input>
+                  <app-form-errors [control]="signUpForm.get('phoneNumber')!"></app-form-errors>
+
+                </div>
+
+
+
+                <div class="mb-10">
+                  <input
+                    type="submit"
+                    value="Sign In"
+                    class="w-full px-5 py-3 text-base font-medium text-white transition border rounded-md cursor-pointer border-primary bg-primary hover:bg-opacity-90"
+                  />
+                </div>
+              </form>
+
+              <div  class="text-center">
+                <a
+                  [routerLink]="formOptions.otherOptionLink"
+                  class="inline-block mb-2 text-base text-dark  hover:text-primary hover:underline"
+                >
+                  {{formOptions.otherOption}}
+                </a>
+                <p class="text-base text-body-color ">
+                  <span class="pr-0.5">Already have an account? </span>
+                  <a
+                    [routerLink]="'/login/'+formOptions.optionLink"
+                    class="text-primary hover:underline"
+                  >
+                    Login
+                  </a>
+                </p>
+
+              </div>
+
+              <div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+  </div>
+</div>

@@ -1,0 +1,26 @@
+<app-navbar></app-navbar>
+
+<div *ngIf="loading" class="container mx-auto">
+  <p class="text-dark text-lg font-semibold my-10 text-center" *ngIf="loading">{{environment.loading.categoriesLoading}}</p>
+</div>
+
+
+<app-not-found *ngIf="!loading && isError" [error]="error"></app-not-found>
+
+<div class="container mx-auto " *ngIf="!loading && !isError">
+  <app-middle-title [headTitle]="courseDetails.title" [subTitle]="environment.courseTitle.subTitle"></app-middle-title>
+  <app-course-info [courseDetails]="courseDetails"></app-course-info>
+  <app-middle-title [headTitle]="environment.courseTitle.courseStructure" [subTitle]="environment.courseTitle.courseStructureDetails"></app-middle-title>
+  <div class="ml-12">
+    <app-chapter *ngFor="let chapter of courseDetails.chapterCourseResponses" [chapter]="chapter"></app-chapter>
+  </div>
+</div>
+<div class="bg-gray-2 mt-16" *ngIf="!loading && !isError">
+  <div class="container mx-auto ">
+    <app-middle-title [headTitle]="environment.courseTitle.reviews" [subTitle]="environment.courseTitle.reviewsDetails"></app-middle-title>
+    <app-review *ngFor="let review of reviews" [review]="review"></app-review>
+    <ng-container *ngIf="reviews.length === 0">
+      <h1 class="flex justify-center pb-14 text-dark font-semibold text-lg">{{environment.courseTitle.noReview}}</h1>
+    </ng-container>
+  </div>
+</div>
