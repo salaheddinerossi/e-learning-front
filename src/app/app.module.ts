@@ -10,6 +10,7 @@ import { HomePageComponent } from './features/public/pages/home-page/home-page.c
 import {PublicModule} from "./features/public/public.module";
 import {ToastrModule} from "ngx-toastr";
 import {HttpClientModule} from "@angular/common/http";
+import {BrowserAnimationsModule, NoopAnimationsModule} from "@angular/platform-browser/animations";
 
 @NgModule({
   declarations: [
@@ -24,7 +25,13 @@ import {HttpClientModule} from "@angular/common/http";
         RouterModule,
         PublicModule,
         HttpClientModule,
-        ToastrModule.forRoot(),
+        ToastrModule.forRoot({
+          positionClass: 'toast-bottom-right',
+          preventDuplicates: true,
+        }),
+        BrowserAnimationsModule,
+        NoopAnimationsModule
+
     ],
   providers: [],
   bootstrap: [AppComponent]

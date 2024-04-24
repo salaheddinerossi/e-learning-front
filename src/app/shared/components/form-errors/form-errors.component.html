@@ -1,5 +1,5 @@
-<!--<div *ngIf="control.touched || control.dirty">-->
-<!--  <ng-container *ngFor="let error of errors">-->
-<!--    <span class="error" *ngIf="control.hasError(error.key)">{{ error.message }}</span>-->
-<!--  </ng-container>-->
-<!--</div>-->
+<div *ngIf="control.errors &&  control.touched">
+  <ng-container *ngFor="let error of errorMessages">
+    <small class="text-red-400" *ngIf="control.hasError(error.type)">{{ error.message }}</small>
+  </ng-container>
+</div>

@@ -1,5 +1,6 @@
 import {Component, EventEmitter, forwardRef, Input, Output} from '@angular/core';
 import {ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR} from "@angular/forms";
+import {Option} from "../../../models/Option";
 
 @Component({
   selector: 'app-select-input',
@@ -16,22 +17,31 @@ import {ControlValueAccessor, FormControl, NG_VALUE_ACCESSOR} from "@angular/for
 })
 export class SelectInputComponent implements ControlValueAccessor {
 
-  @Input() options: { label: string, value: number }[]=[];
+  @Input() options: Option[]=[];
   @Input() placeholder: string = 'Select a value...';
+  @Output() change = new EventEmitter<any>();
 
   public selectControl: FormControl = new FormControl();
+
+
 
   onChange: (value: any) => void = () => {};
   onTouched: () => void = () => {};
 
   writeValue(value: any): void {
-    this.selectControl.setValue(value, {emitEvent: false});
+    if (value !== undefined) {
+      this.selectControl.setValue(value, {emitEvent: false});
+    }
+
   }
 
   registerOnChange(fn: any): void {
-    this.selectControl.valueChanges.subscribe(fn);
+    this.selectControl.valueChanges.subscribe(value => {
+      fn(value);
+      // this.change.emit(value);
+      this.writeValue(value);
+    });
   }
-
   registerOnTouched(fn: any): void {
     this.onTouched = fn;
   }

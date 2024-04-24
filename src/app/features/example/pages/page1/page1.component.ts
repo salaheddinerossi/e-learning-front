@@ -13,8 +13,6 @@ export class Page1Component implements OnInit{
   selectedOption: string | number = "";
 
 
-  navLinks=environment.publicNavLinks;
-  navbarType=NavbarType.Public
 
   handleButtonClick(): void {
     console.log('Button was clicked!');

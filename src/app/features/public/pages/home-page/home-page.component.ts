@@ -1,6 +1,8 @@
-import { Component } from '@angular/core';
+import {Component, OnInit} from '@angular/core';
 import {environment} from "../../../../../environment";
 import {NavbarType} from "../../../../shared/enums/navbar-type";
+import {AuthenticationService} from "../../../../core/services/authentication.service";
+import {User} from "../../../../shared/models/User";
 
 @Component({
   selector: 'app-home-page',
@@ -9,8 +11,10 @@ import {NavbarType} from "../../../../shared/enums/navbar-type";
 })
 export class HomePageComponent {
 
-  navLinks=environment.publicNavLinks;
-  navbarType=NavbarType.Public
+  constructor(private authenticationService:AuthenticationService) {
+  }
+
+
 
 
 }

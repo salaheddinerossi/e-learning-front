@@ -29,6 +29,10 @@
             <a routerLink="{{environment.login.link}}" class="py-3 text-base font-medium px-7 text-dark hover:text-primary">{{environment.login.title}}</a>
             <a routerLink="{{environment.singUp.link}}"  class="bg-primary py-3 text-base font-medium text-white rounded-md  px-7 ">{{environment.singUp.title}}</a>
           </ng-container>
+
+          <ng-container *ngIf="navbarType!=NavbarType.Public">
+            <a (click)="logout()" class="cursor-pointer bg-primary py-3 text-base font-medium text-white rounded-md  px-7 ">{{environment.logout.title}}</a>
+          </ng-container>
         </div>
       </div>
     </div>

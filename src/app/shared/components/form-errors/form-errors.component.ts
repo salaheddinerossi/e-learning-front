@@ -1,5 +1,5 @@
 import {Component, Input} from '@angular/core';
-import {FormControl} from "@angular/forms";
+import {AbstractControl, FormControl} from "@angular/forms";
 
 @Component({
   selector: 'app-form-errors',
@@ -8,12 +8,17 @@ import {FormControl} from "@angular/forms";
 })
 export class FormErrorsComponent {
 
-  @Input() control?: FormControl;
-  errors = [
-    { key: 'required', message: 'This is a required field.' },
-    { key: 'noEmptyString', message: 'Please enter a valid name.' },
-    { key: 'normalEmailRule', message: 'Email format is invalid.' },
-    { key: 'noWhitespaceRequired', message: 'No spaces allowed.' }
+  @Input() control!: AbstractControl;
+
+  errorMessages = [
+    { type: 'required', message: 'This field is required.' },
+    { type: 'email', message: 'Please enter a valid email address.' },
+    { type: 'minLength', message: 'Minimum length required is.' },
+    { type: 'maxLength', message: 'Maximum allowed length is.' },
+    { type: 'pattern', message: 'Invalid format.' },
+    { type: 'min', message: 'Minimum value allowed is.' },
+    { type: 'max', message: 'Maximum value allowed is.' }
   ];
+
 
 }
