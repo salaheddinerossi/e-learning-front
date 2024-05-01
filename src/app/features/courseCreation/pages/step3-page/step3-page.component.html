@@ -1,0 +1,46 @@
+<app-navbar></app-navbar>
+
+<div class="container mx-auto">
+
+  <div>
+    <div class="my-10">
+      <app-middle-title [headTitle]="environment.step3Page.headTitle" [subTitle]="environment.step3Page.subTitle"></app-middle-title>
+    </div>
+    <form [formGroup]="lessonForm"  class="w-full">
+      <div class="mb-5">
+        <app-text-input formControlName="title" placeholder="title"></app-text-input>
+      </div>
+
+      <div class="mb-5">
+        <app-text-area-input formControlName="description" placeholder="description"></app-text-area-input>
+      </div>
+      <button
+        (click)="onSubmitAi()"
+        type="submit"
+        class="bg-dark  border rounded-md inline-flex items-center justify-center py-2 px-5 text-center text-base font-semibold text-white  h disabled:bg-gray-300 disabled:border-gray-300 disabled:text-gray-500"
+      >
+
+        {{environment.step3Page.aiButton}}
+
+      </button>
+
+      <div class="flex justify-center">
+        <app-small-button [buttonText]="environment.step3Page.submitButton" (click)="onSubmitLesson()" ></app-small-button>
+      </div>
+    </form>
+
+    <div class="my-10" *ngIf="usesAI">
+      <div class="my-4">
+        <app-left-title [title]="'Advices:'"></app-left-title>
+      </div>
+
+      <div class="mb-6">
+        <app-advices [advices]="advices" ></app-advices>
+      </div>
+
+      <div>
+        <app-summary [summary]="summary!" (regenerateSubmit)="onRegenerateSubmit($event)"></app-summary>
+      </div>
+    </div>
+  </div>
+</div>

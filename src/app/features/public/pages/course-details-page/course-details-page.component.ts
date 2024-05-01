@@ -51,7 +51,6 @@ export class CourseDetailsPageComponent implements OnInit{
     const id =this.activatedRoute.snapshot.paramMap.get("id");
     if (id){
       this.getCourseDetails(id);
-
     }
   }
 

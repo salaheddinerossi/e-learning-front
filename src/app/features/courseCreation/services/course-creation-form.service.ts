@@ -5,6 +5,7 @@ import {ApiResponse} from "../../../shared/models/ApiResponse";
 import {SkillName} from "../models/SkillName";
 import {Observable} from "rxjs";
 import {CategoryWithParent} from "../models/CategoryWithParent";
+import {ChapterWithParentId} from "../models/ChapterWithParentId";
 
 @Injectable({
   providedIn: 'root'
@@ -21,5 +22,16 @@ export class CourseCreationFormService {
     return this.apiService.get(environment.services.courseCreationService,"category/all");
   }
 
+  createCourse(form:any):Observable<ApiResponse<any>>{
+    return this.apiService.post(environment.services.courseCreationService,"course/",form);
+  }
+
+  getCourseById(id:string):Observable<ApiResponse<any>>{
+    return this.apiService.get(environment.services.courseCreationService,"course/teacherCourse/"+id);
+  }
+
+  createChapter(form:any):Observable<ApiResponse<ChapterWithParentId>>{
+    return this.apiService.post(environment.services.courseCreationService,"chapter/",form);
+  }
 
 }

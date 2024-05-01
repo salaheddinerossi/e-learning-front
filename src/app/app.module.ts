@@ -9,8 +9,9 @@ import {RouterModule} from "@angular/router";
 import { HomePageComponent } from './features/public/pages/home-page/home-page.component';
 import {PublicModule} from "./features/public/public.module";
 import {ToastrModule} from "ngx-toastr";
-import {HttpClientModule} from "@angular/common/http";
+import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {BrowserAnimationsModule, NoopAnimationsModule} from "@angular/platform-browser/animations";
+import {AuthInterceptor} from "./core/interceptors/token.interceptor";
 
 @NgModule({
   declarations: [
@@ -33,7 +34,14 @@ import {BrowserAnimationsModule, NoopAnimationsModule} from "@angular/platform-b
         NoopAnimationsModule
 
     ],
-  providers: [],
+  providers: [
+      {
+          provide:HTTP_INTERCEPTORS,
+          useClass:AuthInterceptor,
+          multi:true
+      }
+
+  ],
   bootstrap: [AppComponent]
 
 })

@@ -154,10 +154,18 @@ export const environment={
     {label:"Advanced",value:"ADVANCED"},
   ],
 
+  step2Page:{
+    headTitle:"Add Chapters",
+    subTitle:"Add new chapters bellow",
+    formTitle:"Fill out the form ",
+    buttonText:"Create chapter",
+  },
 
-
-
-
-
+  step3Page:{
+    headTitle:"Fill the information Bellow",
+    subTitle:"you are creating a lesson inside the chapter with the id:",
+    aiButton:"Push to AI",
+    submitButton:"Add the lesson"
+  }
 
 }

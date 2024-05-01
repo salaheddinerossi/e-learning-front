@@ -1,0 +1,16 @@
+<app-left-title [title]="'Summary:'"></app-left-title>
+<div class="my-5 px-8 py-6 bg-gray-2 rounded text-body-color">
+  {{summary}}
+</div>
+
+
+<form [formGroup]="regenerateForm" class="flex">
+  <div class="w-11/12">
+    <app-text-input formControlName="additional_instructions" [placeholder]="'Regenerate summary?'"></app-text-input>
+  </div>
+
+  <div class="ml-2">
+    <app-small-button (click)="onRegenerate()" [buttonText]="'Regenerate'"></app-small-button>
+  </div>
+
+</form>

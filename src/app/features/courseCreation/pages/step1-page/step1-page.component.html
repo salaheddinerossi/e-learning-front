@@ -3,16 +3,16 @@
   <div class="py-10">
     <app-middle-title [headTitle]="environment.step1.headTitle" [subTitle]="environment.step1.subTitle"></app-middle-title>
   </div>
-  <form [formGroup]="courseForm" >
+  <form [formGroup]="courseForm" (ngSubmit)="onSubmit()" >
     <div class="flex flex-col md:flex-row items-stretch ">
       <div class="w-1/2 sm:w-full md:mr-2 mb-3 ">
-        <app-text-input [placeholder]="'Title'"></app-text-input>
+        <app-text-input [placeholder]="'Title'" formControlName="title" ></app-text-input>
       </div>
       <div class="w-1/2 sm:w-full md:ml-2 mb-3 ">
         <app-select-input
           [placeholder]="'Language'"
           [options]="environment.languagesEnum"
-          formControlName="selectedOption"
+          formControlName="languageEnum"
         ></app-select-input>
       </div>
     </div>
@@ -21,7 +21,7 @@
         <app-select-input
           [placeholder]="'Skills'"
           [options]="SkillOptions"
-          formControlName="selectedOption"
+          formControlName="skillId"
         >
         </app-select-input>
       </div>
@@ -29,7 +29,7 @@
         <app-select-input
           [placeholder]="'Course Level'"
           [options]="environment.courseLevelEnum"
-          formControlName="selectedOption"
+          formControlName="courseLevelEnum"
         >
         </app-select-input>
 
@@ -37,26 +37,24 @@
 
     </div>
     <div class="mb-3">
-      <app-text-area-input [placeholder]="'About this cours?'"></app-text-area-input>
+      <app-text-area-input [placeholder]="'About this cours?'"  formControlName="about"></app-text-area-input>
     </div>
     <div class="mb-3">
-      <app-text-area-input [placeholder]="'Description'"></app-text-area-input>
-    </div>
-    <div class="mb-3">
-      <app-text-area-input [placeholder]="'Requirements'"></app-text-area-input>
+      <app-text-area-input [placeholder]="'Requirements'" formControlName="requirements"></app-text-area-input>
     </div>
     <div formArrayName="categoriesForm">
       <div *ngFor="let category of categoriesForm.controls; let i = index" [formGroupName]="i">
-        <app-select-input [placeholder]="'select a category'"
-                          [options]="getCategoryOptions(i)"
+        <app-select-input
+                          [placeholder]="'select a category'"
+                          [options]="categoryOptions[i]"
                           formControlName="categoryId"
                           (change)="onCategoryChange($event, i)"
-
         >
         </app-select-input>
       </div>
-
+      <app-large-button [buttonText]="'create course'"></app-large-button>
     </div>
+
 
   </form>
 

@@ -1,10 +1,12 @@
 import {Component, OnInit} from '@angular/core';
 import {environment} from "../../../../../environment";
-import {FormArray, FormBuilder, FormControl, FormGroup, Validators} from "@angular/forms";
+import {FormArray, FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {CourseCreationFormService} from "../../services/course-creation-form.service";
 import {SkillName} from "../../models/SkillName";
 import {Option} from "../../../../shared/models/Option";
 import {CategoryWithParent} from "../../models/CategoryWithParent";
+import {ToastrService} from "ngx-toastr";
+import {Router} from "@angular/router";
 
 @Component({
   selector: 'app-step1-page',
@@ -16,20 +18,22 @@ export class Step1PageComponent implements OnInit{
   SkillOptions: Option[] = [];
   allCategories: CategoryWithParent[]= [];
 
-  categories: CategoryWithParent[] = [];
   courseForm: FormGroup;
+  categoryOptions: Option[][] = [];
 
   selectedCategories:number[]= [];
 
-  constructor(private fb: FormBuilder, private courseCreationService: CourseCreationFormService) {
+  constructor(private fb: FormBuilder, private courseCreationService: CourseCreationFormService,private toastr: ToastrService,private router:Router) {
       this.courseForm = this.fb.group({
+        image:[''],
         title: ['', Validators.required],
-        description: ['', Validators.required],
+        about: ['', Validators.required],
+        requirements: ['', Validators.required],
+        languageEnum: ['', Validators.required],
+        courseLevelEnum: ['', Validators.required],
         skillId: ['', Validators.required],
-        finalCategory: ['', Validators.required],
-        selectedOption: ['', Validators.required],
-        categoriesForm: this.fb.array([])
-
+        categoryId: ['', Validators.required],
+        categoriesForm: this.fb.array([]),
       });
   }
 
@@ -46,7 +50,7 @@ export class Step1PageComponent implements OnInit{
   ngOnInit() {
     this.loadSkillsOptions();
     this.loadCategories();
-    this.addCategory();
+
   }
 
   loadSkillsOptions(){
@@ -62,68 +66,107 @@ export class Step1PageComponent implements OnInit{
     );
   }
 
-
   loadCategories() {
-    this.courseCreationService.loadCategories().subscribe(
-        data => {
-          console.log(data);
-          if (data.data) {
-            this.allCategories = data.data;
+      this.courseCreationService.loadCategories().subscribe(
+          data => {
+              if (data.data) {
+                  this.allCategories = data.data;
 
-            //map all categories in a recursive way in which each category has a subCategories property
-            this.categories = this.allCategories
-                .filter(category => category.parentCategoryId === null)
-                .map(category => ({
-                  ...category,
-                  subCategories: this.getSubCategories(category.id)
-                }));
+                  this.categoryOptions[0] = this.getCategoryOptions(0);
 
-
-            console.log(this.categories)
+                  this.addCategory();
+              }
           }
-        }
-    );
+      );
   }
 
-  getCategoryOptions(parentCategoryId: number|null): Option[] {
-    console.log("before parentCategoryId",parentCategoryId);
-    if (parentCategoryId === 0) {
-      parentCategoryId = null;
+  getCategoryOptions(index: number): Option[] {
+
+    let parentCategoryId:number|null =null;
+
+    if(index !== 0){
+        parentCategoryId = this.selectedCategories[index-1];
     }
 
-    else if(parentCategoryId !== null){
-      parentCategoryId = this.selectedCategories[parentCategoryId-1];
-    }
-    console.log("parentCategoryId",parentCategoryId)
 
-    console.log(parentCategoryId)
+
     return this.allCategories
-        .filter(category => category.parentCategoryId === parentCategoryId)
+        .filter(category => category.parentCategoryId == parentCategoryId)
         .map(category => ({
-          label: category.title,
-          value: category.id
+            label: category.title,
+            value: category.id
         }));
   }
 
   onCategoryChange(event:any,index: number) {
-    console.log(event.target.value,index)
-    this.selectedCategories[index] = event.target.value;
-    console.log("selectedCategories",this.selectedCategories)
-    this.addCategory();
 
+      this.selectedCategories[index] = event.target.value;
+      this.categoryOptions[index + 1] = this.getCategoryOptions(index + 1);
+
+      if (this.categoriesForm.length > index + 1) {
+          while(this.categoriesForm.length > index + 1) {
+                  this.categoriesForm.removeAt(index + 1);
+          }
+
+          this.categoryOptions.splice(index + 1, this.categoryOptions.length - index - 1);
+          this.selectedCategories.splice(index + 1, this.selectedCategories.length - index - 1);
+      }
+
+      if(this.getSubCategories(this.selectedCategories[index]).length>0){
+          this.addCategory();
+      }
   }
 
-    getSubCategories(parentCategoryId: number): CategoryWithParent[] {
-        return this.allCategories
-            .filter(category => category.parentCategoryId === parentCategoryId)
-            .map(category => ({
-            ...category,
-            subCategories: this.getSubCategories(category.id)
-            }));
+  getSubCategories(parentCategoryId: number|null): CategoryWithParent[] {
+      return this.allCategories
+          .filter(category => category.parentCategoryId == parentCategoryId)
+          .map(category => ({
+          ...category,
+          subCategories: this.getSubCategories(category.id)
+          }));
+  }
+
+
+
+  onSubmit() {
+    this.courseForm.patchValue({
+      categoryId: this.selectedCategories[this.selectedCategories.length - 1]
+    });
+
+    let formCopy = { ...this.courseForm.value };
+
+    delete formCopy.categoriesForm;
+
+    const category = this.allCategories.find(category => category.id === formCopy.categoryId);
+    if (category && category.containsCategories) {
+      this.toastr.error('You cannot select a category that contains subcategories');
+      return;
     }
 
+    if (this.courseForm.valid) {
+      this.submitForm(formCopy);
 
+    }else{
+      this.courseForm.markAllAsTouched();
+    }
+  }
 
+  submitForm(formCopy: any) {
+    if (this.courseForm.valid){
+      this.courseCreationService.createCourse(formCopy).subscribe(
+          data => {
+            this.router.navigate(['/step2/'+data.data.id]);
+            this.toastr.success("Course created");
+          },
+          error => {
+            this.toastr.error(error.error.message);
+          }
+      )
+    }else {
+      this.toastr.error("form is not valid")
+      this.courseForm.markAllAsTouched();
+    }
+  }
 
 
 
