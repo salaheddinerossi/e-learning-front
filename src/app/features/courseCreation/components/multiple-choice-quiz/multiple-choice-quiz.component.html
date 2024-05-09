@@ -1,0 +1,42 @@
+<ul class="space-y-3 px-8 py-6 bg-gray-2 rounded">
+    <div *ngFor="let multipleChoiceResponse of multipleChoiceQuiz.multipleChoiceResponses ">
+        <li  class="text-body-color  flex text-base">
+      <span
+              class="bg-primary mr-2 mt-2 flex h-2 w-full max-w-[8px] items-center justify-center rounded-full text-base"
+      >
+      </span>
+            {{multipleChoiceResponse.prompt}}
+        </li>
+        <li *ngFor="let option of multipleChoiceResponse.options" class="ml-5 text-body-color  flex text-base">
+      <span
+              class="bg-dark mr-2 mt-2 flex h-2 w-full max-w-[8px] items-center justify-center rounded-full text-base"
+      >
+      </span>
+            <span >{{option}}</span>
+        </li>
+
+        <li class="ml-5 text-body-color  flex text-base">
+      <span
+              class="bg-primary mr-2 mt-2 flex h-2 w-full max-w-[8px] items-center justify-center rounded-full text-base"
+      >
+      </span>
+            <span class="font-bold">{{multipleChoiceResponse.correctAnswer}}</span>
+        </li>
+    </div>
+
+</ul>
+
+
+<form [formGroup]="regenerateForm" class="flex my-5">
+    <div class="w-11/12">
+        <app-text-input formControlName="additional_instructions" [placeholder]="'Regenerate Quiz?'"></app-text-input>
+    </div>
+
+    <div class="ml-2">
+        <app-small-button (click)="onRegenerate()" [buttonText]="'Regenerate'"></app-small-button>
+    </div>
+
+
+</form>
+
+
