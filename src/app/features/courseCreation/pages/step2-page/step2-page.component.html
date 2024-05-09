@@ -29,7 +29,7 @@
 
             </div>
         </form>
-        <div class="w-1/2 sm:w-full md:mr-2 mb-3">
+        <div *ngIf="isUpdate" class="w-1/2 sm:w-full md:mr-2 mb-3">
           <div class="ml-5">
             <app-chapter *ngFor="let chapter of courseDetails.chapterCourseResponses" [chapter]="chapter"></app-chapter>
           </div>

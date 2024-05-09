@@ -6,7 +6,7 @@ import {SkillName} from "../../models/SkillName";
 import {Option} from "../../../../shared/models/Option";
 import {CategoryWithParent} from "../../models/CategoryWithParent";
 import {ToastrService} from "ngx-toastr";
-import {Router} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 
 @Component({
   selector: 'app-step1-page',
@@ -22,8 +22,11 @@ export class Step1PageComponent implements OnInit{
   categoryOptions: Option[][] = [];
 
   selectedCategories:number[]= [];
+  courseId?:number;
 
-  constructor(private fb: FormBuilder, private courseCreationService: CourseCreationFormService,private toastr: ToastrService,private router:Router) {
+  isUpdate = false;
+
+  constructor(private fb: FormBuilder, private courseCreationService: CourseCreationFormService,private toastr: ToastrService,private router:Router,private route:ActivatedRoute){
       this.courseForm = this.fb.group({
         image:[''],
         title: ['', Validators.required],
@@ -50,6 +53,15 @@ export class Step1PageComponent implements OnInit{
   ngOnInit() {
     this.loadSkillsOptions();
     this.loadCategories();
+
+    this.route.params.subscribe(params => {
+      if (params["id"]) {
+
+        this.courseId = params["id"];
+        this.loadCourse(params["id"]);
+      }
+    });
+
 
   }
 
@@ -126,30 +138,100 @@ export class Step1PageComponent implements OnInit{
           }));
   }
 
+  getCategories(categoryId: number): void {
+    // Clear previous selections and form inputs
+    this.selectedCategories = [];
+    this.categoryOptions = [];
+    this.categoriesForm.clear();
 
+    // Initialize the root category options
+    this.categoryOptions[0] = this.allCategories
+      .filter(category => category.parentCategoryId === null)
+      .map(category => ({
+        label: category.title,
+        value: category.id
+      }));
+
+    // A recursive function to build the full path of categories from the selected category
+    const populateCategories = (currentCategoryId: number, depth: number) => {
+      const category = this.allCategories.find(cat => cat.id === currentCategoryId);
+      if (category) {
+        // Add this category to the selected path
+        this.selectedCategories[depth] = category.id;
+
+        // Get the next set of options based on this category
+        if (category.parentCategoryId !== null) {
+          this.categoryOptions[depth] = this.allCategories
+            .filter(cat => cat.parentCategoryId === category.parentCategoryId)
+            .map(cat => ({
+              label: cat.title,
+              value: cat.id
+            }));
+        }
+
+        // Prepare the next level if there's a parent
+        if (category.parentCategoryId) {
+          populateCategories(category.parentCategoryId, depth - 1);
+        }
+      }
+    };
+
+    // Determine the depth of the current category
+    let depth = 0;
+    let current = this.allCategories.find(cat => cat.id === categoryId);
+    while (current && current.parentCategoryId) {
+      depth++;
+      current = this.allCategories.find(cat => cat.id === current!.parentCategoryId);
+    }
+
+    // Populate categories from the selected category upwards
+    populateCategories(categoryId, depth);
+
+    // Create form inputs for each level of the category selection
+    for (let i = 0; i <= depth; i++) {
+      this.addCategory();
+      this.categoriesForm.at(i).patchValue({ categoryId: this.selectedCategories[i] });
+
+      // Update the next level options if needed
+      if (i < depth) {
+        this.categoryOptions[i + 1] = this.allCategories
+          .filter(cat => cat.parentCategoryId === this.selectedCategories[i])
+          .map(cat => ({
+            label: cat.title,
+            value: cat.id
+          }));
+      }
+    }
+
+  }
 
   onSubmit() {
-    this.courseForm.patchValue({
-      categoryId: this.selectedCategories[this.selectedCategories.length - 1]
-    });
+  this.courseForm.patchValue({
+    categoryId: this.selectedCategories[this.selectedCategories.length - 1]
+  });
 
-    let formCopy = { ...this.courseForm.value };
+  let formCopy = { ...this.courseForm.value };
 
-    delete formCopy.categoriesForm;
+  delete formCopy.categoriesForm;
 
-    const category = this.allCategories.find(category => category.id === formCopy.categoryId);
-    if (category && category.containsCategories) {
-      this.toastr.error('You cannot select a category that contains subcategories');
-      return;
-    }
+  const category = this.allCategories.find(category => category.id === formCopy.categoryId);
 
-    if (this.courseForm.valid) {
-      this.submitForm(formCopy);
-
-    }else{
-      this.courseForm.markAllAsTouched();
-    }
+  if (category && category.containsCategories) {
+    this.toastr.error('You cannot select a category that contains subcategories');
+    return;
   }
+
+  if (this.isUpdate){
+    this.updateCourse(formCopy);
+    return;
+  }
+
+  if (this.courseForm.valid) {
+  this.submitForm(formCopy);
+  }else{
+    this.courseForm.markAllAsTouched();
+  }
+}
 
   submitForm(formCopy: any) {
     if (this.courseForm.valid){
@@ -168,7 +250,37 @@ export class Step1PageComponent implements OnInit{
     }
   }
 
+  updateCourse(formCopy: any) {
 
+    if (this.courseForm.valid){
+      this.courseCreationService.updateCourse(formCopy,this.courseId!).subscribe(
+        data => {
+          this.router.navigate(['/step2/'+data.data.id]);
+          this.toastr.success("courseUpdated created");
+        },
+        error => {
+          this.toastr.error(error.error.message);
+        }
+      )
+    }else {
+      this.toastr.error("form is not valid")
+      this.courseForm.markAllAsTouched();
+    }
+
+  }
+
+  loadCourse(id:string) {
+      this.courseCreationService.loadCourse(id).subscribe(
+          data => {
+              if (data.data) {
+                  this.isUpdate = true;
+                  this.courseForm.patchValue(data.data);
+                  this.getCategories(data.data.categoryId);
+                  console.log(data.data.categoryId)
+              }
+          }
+      )
+  }
 
   protected readonly environment = environment;
 }

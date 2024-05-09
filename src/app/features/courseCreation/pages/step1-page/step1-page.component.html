@@ -7,6 +7,7 @@
     <div class="flex flex-col md:flex-row items-stretch ">
       <div class="w-1/2 sm:w-full md:mr-2 mb-3 ">
         <app-text-input [placeholder]="'Title'" formControlName="title" ></app-text-input>
+        <app-form-errors [control]="courseForm.get('title')!"></app-form-errors>
       </div>
       <div class="w-1/2 sm:w-full md:ml-2 mb-3 ">
         <app-select-input
@@ -14,6 +15,9 @@
           [options]="environment.languagesEnum"
           formControlName="languageEnum"
         ></app-select-input>
+
+        <app-form-errors [control]="courseForm.get('languageEnum')!"></app-form-errors>
+
       </div>
     </div>
     <div class="flex flex-col md:flex-row items-stretch">
@@ -24,6 +28,7 @@
           formControlName="skillId"
         >
         </app-select-input>
+        <app-form-errors [control]="courseForm.get('skillId')!"></app-form-errors>
       </div>
       <div class="w-1/2 sm:w-full md:ml-2 mb-3 ">
         <app-select-input
@@ -32,18 +37,23 @@
           formControlName="courseLevelEnum"
         >
         </app-select-input>
+        <app-form-errors [control]="courseForm.get('courseLevelEnum')!"></app-form-errors>
+
 
       </div>
 
     </div>
     <div class="mb-3">
       <app-text-area-input [placeholder]="'About this cours?'"  formControlName="about"></app-text-area-input>
+      <app-form-errors [control]="courseForm.get('about')!"></app-form-errors>
+
     </div>
     <div class="mb-3">
       <app-text-area-input [placeholder]="'Requirements'" formControlName="requirements"></app-text-area-input>
+      <app-form-errors [control]="courseForm.get('requirements')!"></app-form-errors>
     </div>
     <div formArrayName="categoriesForm">
-      <div *ngFor="let category of categoriesForm.controls; let i = index" [formGroupName]="i">
+      <div class="my-2" *ngFor="let category of categoriesForm.controls; let i = index" [formGroupName]="i">
         <app-select-input
                           [placeholder]="'select a category'"
                           [options]="categoryOptions[i]"
@@ -52,7 +62,15 @@
         >
         </app-select-input>
       </div>
-      <app-large-button [buttonText]="'create course'"></app-large-button>
+      <div class="my-6 flex justify-center" *ngIf="isUpdate">
+        <app-large-button [buttonText]="'Update Course'"></app-large-button>
+      </div>
+
+      <div class="my-6 flex justify-center" *ngIf="!isUpdate">
+
+        <app-large-button [buttonText]="'Create Course'"></app-large-button>
+      </div>
+
     </div>
 
 

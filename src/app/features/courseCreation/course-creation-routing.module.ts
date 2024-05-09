@@ -7,9 +7,13 @@ import {Step3PageComponent} from "./pages/step3-page/step3-page.component";
 
 const routes: Routes = [
   {path:'step1',component:Step1PageComponent},
+  {path:'step1/:id',component:Step1PageComponent},
   {path:'start',component:StartPageComponent},
   {path:'step2/:id',component:Step2PageComponent},
+  {path:'step2/:id/:chapterId',component:Step2PageComponent},
+
   {path:'step3/:id',component:Step3PageComponent},
+  {path:'step3/:id/:lessonId',component:Step3PageComponent},
 ];
 
 @NgModule({

@@ -3,6 +3,7 @@ import {ApiService} from "../../../core/services/api.service";
 import {environment} from "../../../../environment";
 import {ApiResponse} from "../../../shared/models/ApiResponse";
 import {Observable} from "rxjs";
+import {LessonDetails} from "../models/LessonDetails";
 
 @Injectable({
   providedIn: 'root'
@@ -18,6 +19,16 @@ export class LessonService {
   regenerateSummary(form:any,id:number):Observable<ApiResponse<any>>{
     return this.api.post(environment.services.courseCreationService,"lesson/summary/"+id,form)
   }
+
+  getLessonDetails(id:number):Observable<ApiResponse<LessonDetails>>{
+    return this.api.get(environment.services.courseCreationService,'lesson/teacher/'+id);
+  }
+
+  updateCourseDetails(id:number,form:any){
+    return this.api.put(environment.services.courseCreationService,"lesson/" +id,form)
+  }
+
+
 
 
 

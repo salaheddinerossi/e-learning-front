@@ -15,6 +15,7 @@
         <app-text-area-input formControlName="description" placeholder="description"></app-text-area-input>
       </div>
       <button
+        *ngIf="!updateForm"
         (click)="onSubmitAi()"
         type="submit"
         class="bg-dark  border rounded-md inline-flex items-center justify-center py-2 px-5 text-center text-base font-semibold text-white  h disabled:bg-gray-300 disabled:border-gray-300 disabled:text-gray-500"
@@ -24,23 +25,73 @@
 
       </button>
 
+      <button
+        *ngIf="updateForm"
+        (click)="onFormUpdate()"
+        type="submit"
+        class="bg-dark  border rounded-md inline-flex items-center justify-center py-2 px-5 text-center text-base font-semibold text-white  h disabled:bg-gray-300 disabled:border-gray-300 disabled:text-gray-500"
+      >
+        update
+      </button>
+
       <div class="flex justify-center">
         <app-small-button [buttonText]="environment.step3Page.submitButton" (click)="onSubmitLesson()" ></app-small-button>
       </div>
     </form>
 
-    <div class="my-10" *ngIf="usesAI">
+  <div class="my-10" *ngIf="usesAI">
       <div class="my-4">
         <app-left-title [title]="'Advices:'"></app-left-title>
       </div>
-
       <div class="mb-6">
         <app-advices [advices]="advices" ></app-advices>
       </div>
-
       <div>
         <app-summary [summary]="summary!" (regenerateSubmit)="onRegenerateSubmit($event)"></app-summary>
       </div>
+    </div>
+
+    <div *ngIf="quizzes">
+      <app-left-title [title]="'Quizzes:'"></app-left-title>
+
+      <h1 class="ml-5 font-semibold text-body-color mt-6 mb-3">Generate quizzes:</h1>
+
+      <div class="flex my-3">
+        <div class="mx-2">
+          <app-small-button [buttonText]="'MultiChoice'" (buttonClick)="createMultipleChoiceQuiz()"></app-small-button>
+        </div>
+        <div class="mx-2">
+          <app-small-button [buttonText]="'TrueFalse'" (buttonClick)="createTrueFalseQuiz()"></app-small-button>
+
+        </div>
+
+        <div class="mx-2">
+          <app-small-button [buttonText]="'Explanatory'" (buttonClick)="createExplanatoryQuiz()"></app-small-button>
+
+        </div>
+
+      </div>
+
+
+      <div *ngIf="quizzes?.multipleChoiceQuizzes?.length!=0">
+        <h1 class="ml-5 font-semibold text-body-color mt-6 mb-3">Multiple Choice Quiz</h1>
+        <div *ngFor=" let multipleChoiceQuiz of quizzes.multipleChoiceQuizzes">
+          <app-multiple-choice-quiz  [multipleChoiceQuiz]="multipleChoiceQuiz" (regenerateSubmit)="updateMultipleChoiceQuiz($event)" ></app-multiple-choice-quiz>
+        </div>
+      </div>
+      <div *ngIf="quizzes?.trueFalseQuizzes?.length!=0">
+        <h1 class="ml-5 font-semibold text-body-color mt-6 mb-3">True False Quiz:</h1>
+        <div *ngFor=" let trueFalseQuiz of quizzes.trueFalseQuizzes">
+          <app-true-false-quiz [trueFalseQuiz]="trueFalseQuiz" (regenerateSubmit)="updateTrueFalseQuiz($event)"></app-true-false-quiz>
+        </div>
+      </div>
+      <div *ngIf="quizzes?.explanatoryQuizzes?.length!=0">
+        <h1 class="ml-5 font-semibold text-body-color mt-6 mb-3">Explanatory Quiz</h1>
+        <div *ngFor=" let explanatoryQuiz of quizzes.explanatoryQuizzes">
+          <app-explanatory-quiz [explanatoryQuiz]="explanatoryQuiz" (regenerateSubmit)="updateExplanatoryQuiz($event)"></app-explanatory-quiz>
+        </div>
+      </div>
+
     </div>
   </div>
 </div>

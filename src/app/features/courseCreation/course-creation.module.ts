@@ -11,6 +11,9 @@ import {Step3PageComponent} from "./pages/step3-page/step3-page.component";
 import { AdvicesComponent } from './components/advices/advices.component';
 import { LeftTitleComponent } from './components/left-title/left-title.component';
 import { SummaryComponent } from './components/summary/summary.component';
+import { ExplanatoryQuizComponent } from './components/explanatory-quiz/explanatory-quiz.component';
+import { TrueFalseQuizComponent } from './components/true-false-quiz/true-false-quiz.component';
+import { MultipleChoiceQuizComponent } from './components/multiple-choice-quiz/multiple-choice-quiz.component';
 
 
 @NgModule({
@@ -21,7 +24,10 @@ import { SummaryComponent } from './components/summary/summary.component';
     Step3PageComponent,
     AdvicesComponent,
     LeftTitleComponent,
-    SummaryComponent
+    SummaryComponent,
+    ExplanatoryQuizComponent,
+    TrueFalseQuizComponent,
+    MultipleChoiceQuizComponent,
   ],
     imports: [
         CommonModule,

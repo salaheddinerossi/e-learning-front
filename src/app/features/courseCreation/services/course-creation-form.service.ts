@@ -34,4 +34,16 @@ export class CourseCreationFormService {
     return this.apiService.post(environment.services.courseCreationService,"chapter/",form);
   }
 
+  loadCourse(id:string):Observable<ApiResponse<any>>{
+    return this.apiService.get(environment.services.courseCreationService,"course/teacherCourse/"+id);
+  }
+
+  updateCourse(form:any,id:number|string):Observable<ApiResponse<any>>{
+    return this.apiService.put(environment.services.courseCreationService,"course/"+id,form);
+  }
+
+  loadChapter(id:number):Observable<ApiResponse<any>>{
+    return this.apiService.get(environment.services.courseCreationService,"chapter/"+id);
+  }
+
 }
