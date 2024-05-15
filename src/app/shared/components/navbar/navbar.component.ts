@@ -40,6 +40,11 @@ export class NavbarComponent implements OnInit {
         this.links = environment.studentNavLinks;
         this.navbarType = NavbarType.Student;
         break;
+      case "ROLE_ADMIN":
+        this.links = environment.adminNavLinks;
+        this.navbarType = NavbarType.Admin;
+        break;
+
       default:
         this.links = environment.publicNavLinks;
         this.navbarType = NavbarType.Public;

@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {environment} from "../../../../../environment";
-import {NavbarType} from "../../../../shared/enums/navbar-type";
 import {CategoryService} from "../../services/category.service";
 import {Category} from "../../models/Category";
 import {ActivatedRoute} from "@angular/router";

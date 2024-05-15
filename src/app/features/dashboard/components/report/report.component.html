@@ -1,0 +1,23 @@
+<div class="bg-gray-1 rounded my-10">
+    <div class="flex justify-between border-b p-4">
+        <h1 class="text-gray-700 text-lg">{{report.firstName}} {{report.lastName}}</h1>
+        <h1 class="text-gray-700 text-lg">{{report.email}}</h1>
+    </div>
+
+
+    <div class="p-4">
+        <h2 class="text-gray-600 font-semibold text-xl">
+            {{report.title}}
+        </h2>
+        <p class="text-body-color py-2">
+            {{report.text}}
+        </p>
+        <p class="text-sm text-body-color py-3">
+            {{report.reportDate}}
+        </p>
+        <div *ngIf="!report.isArchived" class="text-center py-3">
+            <app-small-button (buttonClick)="onArchive()" [buttonText]="'archive'"></app-small-button>
+        </div>
+
+    </div>
+</div>

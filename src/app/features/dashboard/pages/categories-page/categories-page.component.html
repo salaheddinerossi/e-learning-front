@@ -1,0 +1,136 @@
+<app-navbar></app-navbar>
+<div class="container  mx-auto">
+
+  <div class="my-8">
+    <app-middle-title [headTitle]="environment.categoriesPage.headTitle" [subTitle]="environment.categoriesPage.subTitle"></app-middle-title>
+  </div>
+
+  <form [formGroup]="categoryForm" class="mb-10" (ngSubmit)="onSubmit()">
+    <div class="flex flex-col md:flex-row items-stretch ">
+      <div class="w-full sm:w-full md:mr-2 mb-3 ">
+        <app-text-input [placeholder]="'title'" formControlName="title" ></app-text-input>
+      </div>
+    </div>
+
+    <div class="mb-3">
+      <app-text-area-input [placeholder]="'Description'"  formControlName="description"></app-text-area-input>
+    </div>
+
+    <div class="mb-3" *ngIf="!isUpdate">
+      <app-select-input
+              [placeholder]="'type'"
+              formControlName="containsCategories"
+              [options]="typeOptions"
+      ></app-select-input>
+    </div>
+
+    <div formArrayName="categoriesForm" *ngIf="!isUpdate">
+      <div class="my-2" *ngFor="let category of categoriesForm.controls; let i = index" [formGroupName]="i">
+        <app-select-input
+          [placeholder]="'select a category'"
+          [options]="categoryOptions[i]"
+          formControlName="categoryId"
+          (change)="onCategoryChange($event, i)"
+        >
+        </app-select-input>
+      </div>
+
+    </div>
+
+    <div class="flex justify-center" >
+      <app-small-button [buttonText]="'Add Category'" *ngIf="!isUpdate"></app-small-button>
+    </div>
+
+    <div class="flex justify-center" >
+      <app-small-button [buttonText]="'Update category'" *ngIf="isUpdate"></app-small-button>
+    </div>
+
+
+  </form>
+
+
+
+  <div class=" mb-6 ">
+    <app-table-title [title]="environment.skillManagement.title"></app-table-title>
+  </div>
+
+  <div class="flex flex-wrap -mx-4">
+    <div class="w-full px-4">
+      <div class="max-w-full overflow-x-auto">
+        <table class="w-full table-auto">
+          <thead>
+          <tr class="text-center bg-primary">
+            <th
+                    class="w-1/6 min-w-[160px] border-l border-transparent py-4 px-3 text-lg font-medium text-white lg:py-7 lg:px-4"
+            >
+              ID
+            </th>
+            <th
+                    class="w-1/6 min-w-[160px] py-4 px-3 text-lg font-medium text-white lg:py-7 lg:px-4"
+            >
+              Title
+            </th>
+            <th
+                    class="w-1/6 min-w-[160px] py-4 px-3 text-lg font-medium text-white lg:py-7 lg:px-4"
+            >
+              description
+            </th>
+
+            <th
+                    class="w-1/6 min-w-[160px] py-4 px-3 text-lg font-medium text-white lg:py-7 lg:px-4"
+            >
+              containsCategories
+            </th>
+
+            <th
+                    class="w-1/6 min-w-[160px] py-4 px-3 text-lg font-medium text-white lg:py-7 lg:px-4"
+            >
+              modify
+            </th>
+
+
+          </tr>
+          </thead>
+          <tbody>
+          <tr  *ngFor="let category of allCategories" >
+            <td *ngIf="category.id!=null"
+                    class="text-dark border-b border-l border-[#E8E8E8] bg-[#F3F6FF]  py-3 px-2 text-center text-base font-medium"
+            >
+              {{category.id}}
+            </td>
+            <td *ngIf="category.id!=null"
+                    class="text-dark border-b border-[#E8E8E8] bg-white  py-3 px-2 text-center text-base font-medium"
+            >
+              {{category.title}}
+            </td>
+            <td *ngIf="category.id!=null"
+                    class="text-dark border-b border-[#E8E8E8] bg-[#F3F6FF]  py-3 px-2 text-center text-base font-medium"
+            >
+              {{category.description}}
+            </td>
+
+            <td *ngIf="category.id!=null"
+                    class="text-dark border-b border-[#E8E8E8] bg-white  py-3 px-2 text-center text-base font-medium"
+            >
+              {{category.containsCategories}}
+            </td>
+
+            <td *ngIf="category.id!=null"
+                    class="text-dark border-b border-[#E8E8E8] bg-white  py-3 px-2 text-center text-base font-medium"
+            >
+              <button (click)="modifyCategory(category.id)" class="bg-primary mr-3 text-white rounded py-2 px-4 ">Modify</button>
+            </td>
+
+          </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+
+
+
+
+
+</div>

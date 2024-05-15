@@ -1,7 +1,14 @@
 <app-navbar></app-navbar>
 
 <div class="container mx-auto">
+  <p class="text-dark text-lg font-semibold my-10 text-center" *ngIf="loading && isUpdate">{{environment.loading.categoriesLoading}}</p>
+</div>
 
+<app-not-found *ngIf="!loading && hasError" [error]="error"></app-not-found>
+
+
+
+<div class="container mx-auto " *ngIf="(!loading && !hasError) || !isUpdate ">
   <div>
     <div class="my-10">
       <app-middle-title [headTitle]="environment.step3Page.headTitle" [subTitle]="environment.step3Page.subTitle"></app-middle-title>
@@ -91,7 +98,12 @@
           <app-explanatory-quiz [explanatoryQuiz]="explanatoryQuiz" (regenerateSubmit)="updateExplanatoryQuiz($event)"></app-explanatory-quiz>
         </div>
       </div>
-
     </div>
+
+    <div class="flex justify-end my-6" >
+      <app-small-button [routerLink]="'/step2/'+courseId!" [buttonText]="'modify chapters'"></app-small-button>
+    </div>
+
   </div>
+
 </div>

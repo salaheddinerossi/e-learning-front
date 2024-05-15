@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import {NavbarComponent} from "./shared/components/navbar/navbar.component";
 
 const routes: Routes = [
 
@@ -19,6 +18,10 @@ const routes: Routes = [
   {
     path:'',
     loadChildren : () => import('./features/courseCreation/course-creation.module').then(m => m.CourseCreationModule)
+  },
+  {
+    path:'',
+    loadChildren : () => import('./features/dashboard/dashboard.module').then(m => m.DashboardModule)
   }
 
 

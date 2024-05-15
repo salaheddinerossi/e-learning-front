@@ -1,5 +1,13 @@
 <app-navbar></app-navbar>
+
 <div class="container mx-auto">
+  <p class="text-dark text-lg font-semibold my-10 text-center" *ngIf="loading && isUpdate">{{environment.loading.categoriesLoading}}</p>
+</div>
+
+<app-not-found *ngIf="!loading && hasError" [error]="error"></app-not-found>
+
+
+<div class="container mx-auto " *ngIf="(!loading && !hasError) || !isUpdate ">
   <div class="py-10">
     <app-middle-title [headTitle]="environment.step1.headTitle" [subTitle]="environment.step1.subTitle"></app-middle-title>
   </div>
@@ -71,9 +79,14 @@
         <app-large-button [buttonText]="'Create Course'"></app-large-button>
       </div>
 
+
+
     </div>
 
 
   </form>
+  <div *ngIf="isUpdate" class="mb-5 flex justify-end" >
+    <app-small-button [routerLink]="'/step2/'+courseId" [buttonText]="'modify chapters'" ></app-small-button>
+  </div>
 
 </div>

@@ -12,14 +12,22 @@ export const environment={
     { title: 'Home', link: '/' },
     { title: 'profile', link: '/teacher' },
     { title: 'Create Course ', link: '/start' },
-    { title: 'About Us', link: '/report' }
+    { title: 'Report', link: '/report' }
   ],
   studentNavLinks: [
     { title: 'Home', link: '/' },
     { title: 'profile', link: '/student' },
     { title: 'categories ', link: '/categories' },
-    { title: 'About Us', link: '/report' }
+    { title: 'Report', link: '/report' }
   ],
+
+    adminNavLinks: [
+      { title: 'Home', link: '/' },
+      { title: 'teacher requests', link: '/teachers/request' },
+      { title: 'skills', link: '/skills' },
+      { title: 'categories', link: '/admin/categories' },
+      { title: 'reports', link: '/admin/reports' },
+    ],
 
   logout:{title:'Logout',link:"/logout"},
 
@@ -57,6 +65,7 @@ export const environment={
     enrollmentService:"http://localhost:8084/",
     authenticationService:"http://localhost:8080/",
     skillService:"http://localhost:8083/",
+    profileManagementService:"http://localhost:8081/",
 
   },
 
@@ -78,7 +87,11 @@ export const environment={
     coursesNotFound:"Courses Not Found",
     coursesNoFoundDescription:"No Courses found in this page",
     courseNotFound:"course not found",
-    courseNoFoundDescription:"no course found with this id"
+    courseNoFoundDescription:"no course found with this id",
+    chaptersNotFound:"course not found",
+    chaptersNotFoundDescription:"no course found with this id, and cannot contain chapters",
+    lessonNotFound:"Lesson not found",
+    lessonNotFoundDescription:"no lesson found with this id",
 
   },
 
@@ -148,6 +161,12 @@ export const environment={
     {label:"Arabic",value:"ARABIC"},
     {label:"French",value:"FRENCH"},
   ],
+
+  skillLevel:[
+    {label:"BEGINNER",value:"BEGINNER"},
+    {label:"INTERMEDIATE",value:"INTERMEDIATE"},
+    {label:"ADVANCED",value:"ADVANCED"},
+  ],
   courseLevelEnum:[
     {label:"Beginner",value:"BEGINNER"},
     {label:"Intermediate",value:"INTERMEDIATE"},
@@ -166,6 +185,36 @@ export const environment={
     subTitle:"you are creating a lesson inside the chapter with the id:",
     aiButton:"Push to AI",
     submitButton:"Add the lesson"
+  },
+
+  publishPage:{
+    title:"Publish your course",
+    subTitle:"Publish your course and start teaching",
+    buttonText:"Publish now!",
+  },
+
+  teachersRequestPage:{
+    title1:"New requests",
+    title2:"Teachers Accounts"
+  },
+
+  skillManagement:{
+    headTitle:"Skill Management",
+    subTitle:"manage your skills here",
+    title:"Skills: ",
+    formTitle:"Skills form: ",
+    skillRequest:"Skill requests:"
+  },
+
+  categoriesPage:{
+    headTitle:"Categories Management",
+    subTitle:"manage your categories",
+  },
+
+  reportsPage:{
+    headTitle:"Reports",
+    subTitle:"manage your reports"
   }
+
 
 }

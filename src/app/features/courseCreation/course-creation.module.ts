@@ -14,6 +14,7 @@ import { SummaryComponent } from './components/summary/summary.component';
 import { ExplanatoryQuizComponent } from './components/explanatory-quiz/explanatory-quiz.component';
 import { TrueFalseQuizComponent } from './components/true-false-quiz/true-false-quiz.component';
 import { MultipleChoiceQuizComponent } from './components/multiple-choice-quiz/multiple-choice-quiz.component';
+import { PublishPageComponent } from './pages/publish-page/publish-page.component';
 
 
 @NgModule({
@@ -28,6 +29,7 @@ import { MultipleChoiceQuizComponent } from './components/multiple-choice-quiz/m
     ExplanatoryQuizComponent,
     TrueFalseQuizComponent,
     MultipleChoiceQuizComponent,
+    PublishPageComponent,
   ],
     imports: [
         CommonModule,

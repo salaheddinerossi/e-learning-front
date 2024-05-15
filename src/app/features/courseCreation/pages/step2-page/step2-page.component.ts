@@ -8,6 +8,7 @@ import {CourseDetails} from "../../../../shared/models/CourseDetails";
 import {ChapterCourseResponses} from "../../../../shared/models/ChapterCourseResponses";
 import {ChapterWithParentId} from "../../models/ChapterWithParentId";
 import {ToastrService} from "ngx-toastr";
+import {ErrorData} from "../../../../shared/models/ErrorData";
 
 @Component({
   selector: 'app-step2-page',
@@ -30,6 +31,8 @@ export class Step2PageComponent implements OnInit {
   isUpdate = false;
   chapterId?: number;
   parentChapterId?: number;
+  loading:boolean=true;
+  hasError:boolean=false;
 
   courseDetails: CourseDetails = {
     id: 0,
@@ -43,6 +46,12 @@ export class Step2PageComponent implements OnInit {
     chapterCourseResponses: [],
     skillName: ""
   };
+
+  error:ErrorData = {
+    errorTitle:environment.notFound.chaptersNotFound,
+    errorDescription:environment.notFound.chaptersNotFoundDescription
+  }
+
 
 
   constructor(private courseCreationFormService: CourseCreationFormService, private route: ActivatedRoute, private fb: FormBuilder, private toasterService: ToastrService, private router: Router) {
@@ -63,6 +72,7 @@ export class Step2PageComponent implements OnInit {
         this.isUpdate = true;
         this.chapterId = params['chapterId'];
         this.loadChapter(this.chapterId!);
+
       }
     });
   }
@@ -99,12 +109,14 @@ export class Step2PageComponent implements OnInit {
           this.allChapters = this.extractAllChapters(this.courseDetails.chapterCourseResponses);
           this.allChapters.push({id: null, title: 'Root', parentId: null, containsChapters: true});
           this.allChapters = this.allChapters.filter(chapter => chapter.containsChapters);
-
+          this.loading=false;
           this.chapterOptions[0] = this.getChapterOptions(0);
           this.addChapter();
         }
       },
       error => {
+        this.hasError=true;
+        this.loading=false;
         console.error('Error loading course details:', error.error);
         this.toasterService.error('Failed to load course details.');
       }
@@ -184,6 +196,16 @@ export class Step2PageComponent implements OnInit {
 
     delete formCopy.chaptersForm;
 
+    if (this.isUpdate) {
+      formCopy.id = this.chapterId;
+      delete formCopy.course_id;
+      delete formCopy.parent_id;
+      delete formCopy.containsChapters;
+      this.updateChapter(formCopy);
+
+      return
+    }
+
     if (this.chapterForm.valid) {
       this.createChapter(formCopy);
     }
@@ -203,7 +225,6 @@ export class Step2PageComponent implements OnInit {
             this.allChapters.push(data.data);
           }
 
-          console.log(this.allChapters);
 
           this.toasterService.success("Chapter Created");
 
@@ -223,75 +244,6 @@ export class Step2PageComponent implements OnInit {
     );
   }
 
-  getChapters(chapterId: number): void {
-
-    // Clear previous selections and form inputs
-    this.selectedChapterId = [];
-    this.chapterOptions = [];
-    this.chaptersForm.clear();
-
-    // Initialize the root chapters options
-    this.chapterOptions[0] = this.allChapters
-      .filter(chapter => chapter.parentId === null)
-      .map(chapter => ({
-        label: chapter.title,
-        value: chapter.id
-      }));
-
-    // A recursive function to build the full path of chapters from the selected chapter
-    const populateChapters = (currentChapterId: number, depth: number) => {
-      const chapter = this.allChapters.find(chap => chap.id === currentChapterId);
-      if (chapter) {
-        // Add this chapter to the selected path
-        this.selectedChapterId[depth] = chapter.id!;
-
-        // Get the next set of options based on this chapter
-        if (chapter.parentId !== null) {
-          this.chapterOptions[depth] = this.allChapters
-            .filter(chap => chap.parentId === chapter.parentId)
-            .map(chap => ({
-              label: chap.title,
-              value: chap.id
-            }));
-        }
-
-        // Prepare the next level if there's a parent
-        if (chapter.parentId) {
-          populateChapters(chapter.parentId, depth - 1);
-        }
-      }
-    };
-
-    // Determine the depth of the current chapter
-    let depth = 0;
-    let current = this.allChapters.find(chap => chap.id === chapterId);
-    while (current && current.parentId) {
-      depth++;
-      current = this.allChapters.find(chap => chap.id === current!.parentId);
-    }
-
-    // Populate chapters from the selected chapter upwards
-    populateChapters(chapterId, depth);
-
-    // Create form inputs for each level of the chapter selection
-    for (let i = 0; i <= depth; i++) {
-      this.addChapter(); // Assuming you have a method addChapter similar to addCategory
-      this.chaptersForm.at(i).patchValue({chapterId: this.selectedChapterId[i]});
-
-      // Update the next level options if needed
-      if (i < depth) {
-        this.chapterOptions[i + 1] = this.allChapters
-          .filter(chap => chap.parentId === this.selectedChapterId[i])
-          .map(chap => ({
-            label: chap.title,
-            value: chap.id
-          }));
-      }
-    }
-
-    console.log(this.selectedChapterId);
-    console.log(this.chapterOptions);
-  }
 
   loadChapter(id: number) {
     this.courseCreationFormService.loadChapter(id).subscribe(
@@ -302,18 +254,61 @@ export class Step2PageComponent implements OnInit {
             containsChapters: data.data.containsChapters,
             parent_id: data.data.parentChapter_id
           });
+          this.loading=false;
           this.parentChapterId = data.data.parentChapter_id;
-          this.getChapters(this.parentChapterId!);
         } else {
           this.toasterService.error('Failed to load chapter details.');
         }
       },
       error => {
+        this.hasError=true;
+        this.loading=false;
         console.error('Error loading chapter:', error);
         this.toasterService.error('Failed to load chapter details.');
       }
     );
   }
+
+  updateChapter(formCopy: any) {
+    this.courseCreationFormService.updateChapter(formCopy, this.chapterId!).subscribe(
+      data => {
+        this.router.navigate(['/step2/' + this.id]);
+        this.toasterService.success('Chapter updated');
+      },
+      error => {
+        this.toasterService.error(error.error.message);
+      }
+    );
+  }
+
+  deleteChapter(chapterId:number) {
+    this.courseCreationFormService.deleteChapter(chapterId).subscribe(
+      data => {
+        this.toasterService.success('Chapter deleted');
+          this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+          this.router.onSameUrlNavigation = 'reload';
+          this.router.navigate(['/step2/' + this.id]);
+      },
+      error => {
+        this.toasterService.error(error.error.message);
+      }
+    );
+  }
+
+  deleteLesson(lessonId:number){
+    this.courseCreationFormService.deleteLesson(lessonId).subscribe(
+      data => {
+        this.toasterService.success('Lesson deleted');
+        this.router.routeReuseStrategy.shouldReuseRoute = () => false;
+        this.router.onSameUrlNavigation = 'reload';
+        this.router.navigate(['/step2/' + this.id]);
+      },
+      error => {
+        this.toasterService.error(error.error.message);
+      }
+    );
+  }
+
 
 
   protected readonly environment = environment;

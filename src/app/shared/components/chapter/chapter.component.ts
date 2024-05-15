@@ -1,4 +1,4 @@
-import {Component, Input} from '@angular/core';
+import {Component, EventEmitter, Input, Output} from '@angular/core';
 import {ChapterCourseResponses} from "../../models/ChapterCourseResponses";
 
 @Component({
@@ -8,10 +8,22 @@ import {ChapterCourseResponses} from "../../models/ChapterCourseResponses";
 })
 export class ChapterComponent {
 
-  @Input() chapter!: ChapterCourseResponses;
-
+  @Input() chapter!: ChapterCourseResponses
+  @Input() isUpdate = false;
+  @Input() courseId?: number;
+  @Output() deleteChapterEvent = new EventEmitter<number>();
+  @Output() deleteLessonEvent = new EventEmitter<number>();
   toggleChapter(chapter: ChapterCourseResponses) {
     chapter.isOpen = !chapter.isOpen;
+  }
+
+
+  deleteChapter(chapterId: number) {
+    this.deleteChapterEvent.emit(chapterId);
+  }
+
+  deleteLesson(lessonId: number) {
+    this.deleteLessonEvent.emit(lessonId);
   }
 
 

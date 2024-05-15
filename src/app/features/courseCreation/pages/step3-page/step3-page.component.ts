@@ -9,6 +9,7 @@ import {QuizService} from "../../services/quiz.service";
 import {MultiChoiceQuiz} from "../../models/quizzes/MultiChoiceQuiz";
 import {TrueFalseQuiz} from "../../models/quizzes/TrueFalseQuiz";
 import {ExplanatoryQuiz} from "../../models/quizzes/ExplanatoryQuiz";
+import {ErrorData} from "../../../../shared/models/ErrorData";
 
 @Component({
   selector: 'app-step3-page',
@@ -19,8 +20,6 @@ export class Step3PageComponent implements OnInit{
 
   protected readonly environment = environment;
   lessonForm:FormGroup;
-
-
   chapterId!:string;
   usesAI:boolean=false;
   advices:string[]=[];
@@ -28,7 +27,19 @@ export class Step3PageComponent implements OnInit{
   lessonId?:number;
   updateForm:boolean=false;
   quizzes!:QuizzesResponse;
-  constructor(private fb:FormBuilder,private route:ActivatedRoute,private toaster:ToastrService,private lessonService:LessonService,private quizService:QuizService) {
+  courseId?:number;
+
+    isUpdate = false
+    loading: boolean = true;
+    hasError: boolean = false;
+
+    error:ErrorData = {
+        errorTitle:environment.notFound.lessonNotFound,
+        errorDescription:environment.notFound.lessonNotFoundDescription
+    }
+
+
+    constructor(private fb:FormBuilder,private route:ActivatedRoute,private toaster:ToastrService,private lessonService:LessonService,private quizService:QuizService) {
     this.lessonForm=this.fb.group({
       title:["",Validators.required],
       description:["",Validators.required],
@@ -45,14 +56,17 @@ export class Step3PageComponent implements OnInit{
       params => {
         this.chapterId= params['id'];
 
+        this.getCourseId(Number(this.chapterId));
         this.lessonForm.patchValue({
           chapterId:Number(this.chapterId)
         })
 
         this.lessonId = params["lessonId"]
         if (this.lessonId){
+            this.isUpdate = true;
           this.updateForm=true;
           this.getCourseDetails(this.lessonId)
+
 
         }
 
@@ -89,7 +103,6 @@ export class Step3PageComponent implements OnInit{
       this.lessonForm.markAllAsTouched();
       return;
     }
-
     if (this.lessonForm.valid){
       this.createLesson(this.lessonForm.value);
     }
@@ -98,17 +111,17 @@ export class Step3PageComponent implements OnInit{
   createLesson(form:any){
 
     this.lessonService.createLesson(form).subscribe(
-
         data => {
           this.usesAI=data.data.usesAI;
           this.advices=data.data.advices;
           this.summary = data.data.summary;
           this.lessonId= data.data.id;
           this.toaster.success("lesson has been added");
+        },
+        error => {
+          this.toaster.error(error.error.message)
         }
-
     )
-
   }
 
   regenerateSummary(form:any){
@@ -116,7 +129,9 @@ export class Step3PageComponent implements OnInit{
       data => {
         this.summary=data.data.summary;
         this.toaster.success("summary has been regenerated");
-      }
+      },error => {
+        this.toaster.error(error.error.message)
+    }
     )
   }
 
@@ -140,17 +155,25 @@ export class Step3PageComponent implements OnInit{
           this.lessonId = data.data.id;
           this.quizzes=data.data.quizzesResponse;
 
-          console.log(this.quizzes)
+          this.loading=false;
+
         }
-      }
+      }, error => {
+        this.toaster.error(error.error.message)
+        this.hasError=true;
+        this.loading=false;
+
+        }
     )
   }
 
   updateLesson(form:any){
     return this.lessonService.updateCourseDetails(this.lessonId!,form).subscribe(
-      data => {
+        () => {
         this.toaster.success("form has been updated")
-      }
+      },error =>{
+            this.toaster.error(error.error.message)
+        }
     )
   }
 
@@ -167,8 +190,10 @@ export class Step3PageComponent implements OnInit{
                       return quiz?.id === data.data?.id ? data.data : quiz;
                   }).filter(Boolean) as MultiChoiceQuiz[];
               }
+
+              this.toaster.success("Quiz has been updated")
           },error => {
-              console.log(error)
+              this.toaster.error(error.error.message)
           }
       );
   }
@@ -186,8 +211,9 @@ export class Step3PageComponent implements OnInit{
                         return quiz?.id === data.data?.id ? data.data : quiz;
                     }).filter(Boolean) as TrueFalseQuiz[];
                 }
+                this.toaster.success("Quiz has been updated")
             },error => {
-                console.log(error)
+                this.toaster.error(error.error.message)
             }
         );
     }
@@ -205,8 +231,9 @@ export class Step3PageComponent implements OnInit{
                         return quiz?.id === data.data?.id ? data.data : quiz;
                     }).filter(Boolean) as ExplanatoryQuiz[];
                 }
+                this.toaster.success("Quiz has been updated")
             },error => {
-                console.log(error)
+                this.toaster.error(error.error.message)
             }
         );
     }
@@ -217,8 +244,10 @@ export class Step3PageComponent implements OnInit{
                 if (data?.data && this.quizzes?.multipleChoiceQuizzes) {
                     this.quizzes.multipleChoiceQuizzes.push(data.data);
                 }
+                this.toaster.success("Quiz has been created")
+
             },error => {
-                console.log(error)
+                this.toaster.error(error.error.message)
             }
         );
     }
@@ -229,8 +258,9 @@ export class Step3PageComponent implements OnInit{
                 if (data?.data && this.quizzes?.trueFalseQuizzes) {
                     this.quizzes.trueFalseQuizzes.push(data.data);
                 }
+                this.toaster.success("Quiz has been created")
             },error => {
-                console.log(error)
+                this.toaster.error(error.error.message)
             }
         );
     }
@@ -241,14 +271,12 @@ export class Step3PageComponent implements OnInit{
                 if (data?.data && this.quizzes?.explanatoryQuizzes) {
                     this.quizzes.explanatoryQuizzes.push(data.data);
                 }
+                this.toaster.success("Quiz has been created")
             },error => {
-                console.log(error)
+                this.toaster.error(error.error.message)
             }
         );
     }
-
-
-
 
     onFormUpdate(){
     if(this.lessonForm.invalid){
@@ -260,4 +288,21 @@ export class Step3PageComponent implements OnInit{
       this.updateLesson(this.lessonForm.value);
     }
   }
+
+    getCourseId(chapterId:number){
+        this.lessonService.getCourseId(chapterId).subscribe(
+            data => {
+                if (data.data) {
+                    this.courseId = data.data;
+                    console.log(this.courseId)
+                }
+            },
+            error => {
+                console.error('Error loading course id:', error.error);
+                this.toaster.error('Failed to load course id.');
+            }
+        );
+
+    }
+
 }

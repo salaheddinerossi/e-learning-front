@@ -1,7 +1,8 @@
 export interface CategoryWithParent{
-    id:number;
+    id:number|null;
     title:string;
     containsCategories:boolean;
-    parentCategoryId:number;
+    parentCategoryId:number|null;
+    description?:string;
     subCategories?: CategoryWithParent[];
 }

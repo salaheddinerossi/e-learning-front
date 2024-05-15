@@ -4,6 +4,7 @@ import {Step1PageComponent} from "./pages/step1-page/step1-page.component";
 import {StartPageComponent} from "./pages/start-page/start-page.component";
 import {Step2PageComponent} from "./pages/step2-page/step2-page.component";
 import {Step3PageComponent} from "./pages/step3-page/step3-page.component";
+import {PublishPageComponent} from "./pages/publish-page/publish-page.component";
 
 const routes: Routes = [
   {path:'step1',component:Step1PageComponent},
@@ -14,6 +15,8 @@ const routes: Routes = [
 
   {path:'step3/:id',component:Step3PageComponent},
   {path:'step3/:id/:lessonId',component:Step3PageComponent},
+  {path:'publish/:id',component:PublishPageComponent},
+
 ];
 
 @NgModule({

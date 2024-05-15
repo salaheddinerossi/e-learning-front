@@ -46,4 +46,21 @@ export class CourseCreationFormService {
     return this.apiService.get(environment.services.courseCreationService,"chapter/"+id);
   }
 
+  updateChapter(form:any,id:number):Observable<ApiResponse<any>>{
+    return this.apiService.put(environment.services.courseCreationService,"chapter/"+id,form);
+  }
+
+  deleteChapter(chapterId:number){
+    return this.apiService.delete(environment.services.courseCreationService,"chapter/"+chapterId);
+  }
+
+  deleteLesson(lessonId:number){
+    return this.apiService.delete(environment.services.courseCreationService,"lesson/"+lessonId);
+  }
+
+  publishCourse(id:number){
+    return this.apiService.put(environment.services.courseCreationService,"course/publish/"+id,{});
+  }
+
+
 }

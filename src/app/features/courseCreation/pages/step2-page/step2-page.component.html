@@ -1,5 +1,11 @@
 <app-navbar></app-navbar>
-<div class="container mx-auto">
+<div class="container mx-auto" *ngIf="loading  && isUpdate">
+    <p class="text-dark text-lg font-semibold my-10 text-center" >{{environment.loading.categoriesLoading}}</p>
+</div>
+
+<app-not-found *ngIf="!loading && hasError" [error]="error"></app-not-found>
+
+<div class="container mx-auto " *ngIf="(!loading && !hasError) ">
     <div class="my-10">
         <app-middle-title [headTitle]="environment.step2Page.formTitle" [subTitle]="environment.step2Page.subTitle" ></app-middle-title>
     </div>
@@ -7,14 +13,14 @@
         <form [formGroup]="chapterForm" class="w-1/2 sm:w-full md:mr-2 mb-3 px-5 border-r" (ngSubmit)="onSubmit()">
             <h1 class="font-bold text-xl text-dark-2 mb-3">{{environment.step2Page.formTitle}}</h1>
                 <app-text-input formControlName="title" placeholder="title"></app-text-input>
-            <div class="mt-6">
+            <div class="mt-6" *ngIf="!isUpdate" >
                 <app-select-input
                         [placeholder]="'type'"
                         formControlName="containsChapters"
                         [options]="typeOptions"
                 ></app-select-input>
             </div>
-            <div  formArrayName="chaptersForm" class="flex">
+            <div *ngIf="!isUpdate"  formArrayName="chaptersForm" class="flex">
                 <div class="mt-6 mr-3" *ngFor="let chapter of chaptersForm.controls; let i = index" [formGroupName]="i">
                     <app-select-input
                         [placeholder]="'select a chapter'"
@@ -24,17 +30,25 @@
                     ></app-select-input>
                 </div>
             </div>
-            <div class=" flex justify-center my-5">
+            <div *ngIf="!isUpdate" class=" flex justify-center my-5">
                 <app-small-button [buttonText]="'Create Chapter!'"></app-small-button>
-
             </div>
+            <div *ngIf="isUpdate" class=" flex justify-center my-5">
+                <app-small-button [buttonText]="'Update Chapter!'"></app-small-button>
+            </div>
+
         </form>
-        <div *ngIf="isUpdate" class="w-1/2 sm:w-full md:mr-2 mb-3">
+        <div  class="w-1/2 sm:w-full md:mr-2 mb-3">
           <div class="ml-5">
-            <app-chapter *ngFor="let chapter of courseDetails.chapterCourseResponses" [chapter]="chapter"></app-chapter>
+            <app-chapter (deleteLessonEvent)="deleteLesson($event)" (deleteChapterEvent)="deleteChapter($event)" [courseId]="courseDetails.id" [isUpdate]="true" *ngFor="let chapter of courseDetails.chapterCourseResponses" [chapter]="chapter"></app-chapter>
           </div>
         </div>
 
+    </div>
+
+    <div  class="mb-5 flex justify-between" >
+        <app-small-button [routerLink]="'/step1/'+courseDetails.id" [buttonText]="'modify course'" ></app-small-button>
+        <app-small-button [routerLink]="'/publish/'+courseDetails.id" [buttonText]="'Publish course'"></app-small-button>
     </div>
 
 </div>

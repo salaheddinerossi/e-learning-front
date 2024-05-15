@@ -28,6 +28,9 @@ export class LessonService {
     return this.api.put(environment.services.courseCreationService,"lesson/" +id,form)
   }
 
+  getCourseId(chapterId:number):Observable<ApiResponse<number>>{
+    return this.api.get(environment.services.courseCreationService,"course/chapter/"+chapterId);
+  }
 
 
 
