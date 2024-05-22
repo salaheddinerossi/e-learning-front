@@ -214,6 +214,20 @@ export const environment={
   reportsPage:{
     headTitle:"Reports",
     subTitle:"manage your reports"
+  },
+
+  reportFormPage:{
+    headTitle:"Report Page",
+    subTitle:"Report your problem to the adminstration"
+  },
+
+  studentProfile:{
+    headTitle:"Student profile",
+    subTitle:"modify your profile and view your personal information"
+  },
+  teacherProfile:{
+    headTitle:"Teacher profile",
+    subTitle:"modify your profile and view your personal information"
   }
 
 

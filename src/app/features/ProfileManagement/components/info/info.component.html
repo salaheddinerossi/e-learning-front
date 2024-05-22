@@ -1,0 +1,10 @@
+<form [formGroup]="infoForm" >
+    <h1 class="font-semibold text-dark ">Change your personal information:</h1>
+    <div class="my-5">
+        <app-text-input formControlName="firstName" [placeholder]="'first name'"></app-text-input>
+    </div>
+    <div class="my-5">
+        <app-text-input formControlName="lastName" [placeholder]="'last name'"></app-text-input>
+    </div>
+    <app-small-button (click)="onSubmit()" [buttonText]="'submit'"></app-small-button>
+</form>

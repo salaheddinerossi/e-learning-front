@@ -4,8 +4,8 @@ import {SkillService} from "../../services/skill.service";
 import {SkillResponse} from "../../models/SkillResponse";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
 import {ToastrService} from "ngx-toastr";
-import {CourseResponse} from "../../models/CourseResponse";
 import {CourseService} from "../../services/course.service";
+import {Course} from "../../../../shared/models/Course";
 
 @Component({
   selector: 'app-skills-page',
@@ -17,7 +17,7 @@ export class SkillsPageComponent implements OnInit{
   protected readonly environment = environment;
   skills:SkillResponse[] = [];
   isUpdate:boolean = false;
-  courses:CourseResponse[] = [];
+  courses:Course[] = [];
 
   currentSkill?:SkillResponse;
 

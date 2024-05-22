@@ -1,0 +1,74 @@
+<app-navbar></app-navbar>
+
+<div class="my-12">
+    <app-middle-title [headTitle]="environment.teacherProfile.headTitle" [subTitle]="environment.studentProfile.subTitle" ></app-middle-title>
+</div>
+<div class="mx-auto container">
+    <div
+            class="w-full "
+    >
+        <div
+                class="flex flex-col flex-wrap rounded-lg border-b  border-[#E4E4E4] py-3 px-4 sm:flex-row"
+        >
+            <a
+                    href="javascript:void(0)"
+                    (click)="openTab(1)"
+                    [ngClass]="openTabIndex === 1 ? activeClasses : inactiveClasses"
+                    class="px-4 py-3 text-sm font-medium rounded-md md:text-base lg:px-6"
+            >
+                Approved Courses
+            </a>
+            <a
+                    href="javascript:void(0)"
+                    (click)="openTab(2)"
+                    [ngClass]="openTabIndex === 2 ? activeClasses : inactiveClasses"
+                    class="px-4 py-3 text-sm font-medium rounded-md md:text-base lg:px-6"
+            >
+                Published Courses
+            </a>
+            <a
+                    href="javascript:void(0)"
+                    (click)="openTab(3)"
+                    [ngClass]="openTabIndex === 3 ? activeClasses : inactiveClasses"
+                    class="px-4 py-3 text-sm font-medium rounded-md md:text-base lg:px-6"
+            >
+                Draft Courses
+            </a>
+            <a
+                    href="javascript:void(0)"
+                    (click)="openTab(4)"
+                    [ngClass]="openTabIndex === 4 ? activeClasses : inactiveClasses"
+                    class="px-4 py-3 text-sm font-medium rounded-md md:text-base lg:px-6"
+            >
+                Personal information
+            </a>
+        </div>
+    </div>
+    <div>
+        <div *ngIf="openTabIndex === 1" class="p-6 text-base leading-relaxed text-body-color ">
+            <div class="-mx-4 flex flex-wrap">
+                <app-course *ngFor="let course of approvedCourses" [course]="course"></app-course>
+            </div>
+        </div>
+        <div *ngIf="openTabIndex === 2" class="p-6 text-base leading-relaxed text-body-color ">
+            <div class="-mx-4 flex flex-wrap">
+                <app-course *ngFor="let course of publishedCourses" [course]="course"></app-course>
+            </div>
+        </div>
+        <div *ngIf="openTabIndex === 3" class="p-6 text-base leading-relaxed text-body-color ">
+            <div class="-mx-4 flex flex-wrap">
+                <app-course *ngFor="let course of draftedCourses" [course]="course"></app-course>
+            </div>
+        </div>
+        <div *ngIf="openTabIndex === 4" class="p-6 text-base leading-relaxed text-body-color ">
+            <app-info (submitInfoForm)="submitInfoForm($event)" [info]="personalInfo"></app-info>
+        </div>
+
+        <div *ngIf="openTabIndex === 4" class="p-6 text-base leading-relaxed text-body-color ">
+            <app-password-update (submitPasswordForm)="updatePassword($event)" ></app-password-update>
+        </div>
+
+    </div>
+
+
+</div>

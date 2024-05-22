@@ -13,12 +13,14 @@
         <form [formGroup]="chapterForm" class="w-1/2 sm:w-full md:mr-2 mb-3 px-5 border-r" (ngSubmit)="onSubmit()">
             <h1 class="font-bold text-xl text-dark-2 mb-3">{{environment.step2Page.formTitle}}</h1>
                 <app-text-input formControlName="title" placeholder="title"></app-text-input>
-            <div class="mt-6" *ngIf="!isUpdate" >
+
+          <div class="mt-6" *ngIf="!isUpdate" >
                 <app-select-input
                         [placeholder]="'type'"
                         formControlName="containsChapters"
                         [options]="typeOptions"
                 ></app-select-input>
+
             </div>
             <div *ngIf="!isUpdate"  formArrayName="chaptersForm" class="flex">
                 <div class="mt-6 mr-3" *ngFor="let chapter of chaptersForm.controls; let i = index" [formGroupName]="i">

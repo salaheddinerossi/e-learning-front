@@ -1,0 +1,9 @@
+<div class="quiz-container">
+  <app-multi-choice-quiz-form
+    [quizForm]="quizForm"
+    (addQuestion)="addQuestion()"
+    (removeQuestion)="removeQuestion($event)"
+    (removeForm)="removeForm()"
+    (submitForm)="onSubmit()">
+  </app-multi-choice-quiz-form>
+</div>

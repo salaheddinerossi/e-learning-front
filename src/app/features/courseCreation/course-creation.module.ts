@@ -15,7 +15,12 @@ import { ExplanatoryQuizComponent } from './components/explanatory-quiz/explanat
 import { TrueFalseQuizComponent } from './components/true-false-quiz/true-false-quiz.component';
 import { MultipleChoiceQuizComponent } from './components/multiple-choice-quiz/multiple-choice-quiz.component';
 import { PublishPageComponent } from './pages/publish-page/publish-page.component';
-
+import { MultiChoiceQuizContainerComponent } from './components/quizContainers/multi-choice-quiz-container/multi-choice-quiz-container.component';
+import { ExplanatoryQuizContainerComponent } from './components/quizContainers/explanatory-quiz-container/explanatory-quiz-container.component';
+import { TrueFalseQuizContainerComponent } from './components/quizContainers/true-false-quiz-container/true-false-quiz-container.component';
+import {MultiChoiceQuizFormComponent} from "./components/quizzes/multi-choice-quiz-form/multi-choice-quiz-form.component";
+import {TrueFalseQuizFormComponent} from "./components/quizzes/true-false-quiz-form/true-false-quiz-form.component";
+import {ExplanatoryQuizFormComponent} from "./components/quizzes/explanatory-quiz-form/explanatory-quiz-form.component";
 
 @NgModule({
   declarations: [
@@ -30,13 +35,19 @@ import { PublishPageComponent } from './pages/publish-page/publish-page.componen
     TrueFalseQuizComponent,
     MultipleChoiceQuizComponent,
     PublishPageComponent,
+    MultiChoiceQuizContainerComponent,
+    ExplanatoryQuizContainerComponent,
+    TrueFalseQuizContainerComponent,
+    MultiChoiceQuizFormComponent,
+    ExplanatoryQuizFormComponent,
+    TrueFalseQuizFormComponent
   ],
     imports: [
         CommonModule,
         CourseCreationRoutingModule,
         SharedModule,
         FormsModule,
-        ReactiveFormsModule
+        ReactiveFormsModule,
     ]
 })
 export class CourseCreationModule { }

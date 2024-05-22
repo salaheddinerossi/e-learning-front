@@ -16,44 +16,46 @@ import { ChapterComponent } from './components/chapter/chapter.component';
 import { MiddleTitleComponent } from './components/middle-title/middle-title.component';
 import { TruncatePipe } from './pipes/truncate.pipe';
 import { NotFoundComponent } from './components/not-found/not-found.component';
-
+import {CourseComponent} from "./components/course/course.component";
 
 
 @NgModule({
-  declarations: [
-    NavbarComponent,
-    LargeButtonComponent,
-    SmallButtonComponent,
-    TextInputComponent,
-    TextAreaInputComponent,
-    SelectInputComponent,
-    FileInputComponent,
-    FormErrorsComponent,
-    MainTitleComponent,
-    BreadcrumbComponent,
-    ChapterComponent,
-    MiddleTitleComponent,
-    TruncatePipe,
-    NotFoundComponent
-  ],
-  exports: [
-    NavbarComponent,
-    LargeButtonComponent,
-    SmallButtonComponent,
-    TextInputComponent,
-    TextAreaInputComponent,
-    SelectInputComponent,
-    FileInputComponent,
-    FormErrorsComponent,
-    MainTitleComponent,
-    BreadcrumbComponent,
-    ChapterComponent,
-    MiddleTitleComponent,
-    TruncatePipe,
-    NotFoundComponent,
+    declarations: [
+        NavbarComponent,
+        LargeButtonComponent,
+        SmallButtonComponent,
+        TextInputComponent,
+        TextAreaInputComponent,
+        SelectInputComponent,
+        FileInputComponent,
+        FormErrorsComponent,
+        MainTitleComponent,
+        BreadcrumbComponent,
+        ChapterComponent,
+        MiddleTitleComponent,
+        TruncatePipe,
+        NotFoundComponent,
+        CourseComponent
+    ],
+    exports: [
+        NavbarComponent,
+        LargeButtonComponent,
+        SmallButtonComponent,
+        TextInputComponent,
+        TextAreaInputComponent,
+        SelectInputComponent,
+        FileInputComponent,
+        FormErrorsComponent,
+        MainTitleComponent,
+        BreadcrumbComponent,
+        ChapterComponent,
+        MiddleTitleComponent,
+        TruncatePipe,
+        NotFoundComponent,
+        CourseComponent,
 
 
-  ],
+    ],
     imports: [
         CommonModule,
         RouterLink,

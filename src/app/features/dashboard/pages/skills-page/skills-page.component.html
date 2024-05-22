@@ -19,6 +19,8 @@
     <div class="flex flex-col md:flex-row items-stretch ">
       <div class="w-1/2 sm:w-full md:mr-2 mb-3 ">
         <app-text-input [placeholder]="'name'" formControlName="name" ></app-text-input>
+        <app-form-errors [control]="skillForm.get('name')!"></app-form-errors>
+
       </div>
       <div class="w-1/2 sm:w-full md:mr-2 mb-3 ">
         <app-select-input
@@ -26,11 +28,15 @@
           formControlName="skillLevel"
           [options]="environment.skillLevel"
         ></app-select-input>
+        <app-form-errors [control]="skillForm.get('skillLevel')!"></app-form-errors>
+
       </div>
     </div>
 
     <div class="mb-3">
       <app-text-area-input [placeholder]="'Skill Description'"  formControlName="skillDescription"></app-text-area-input>
+      <app-form-errors [control]="skillForm.get('skillDescription')!"></app-form-errors>
+
     </div>
 
     <div class="flex justify-center" *ngIf="!isUpdate">

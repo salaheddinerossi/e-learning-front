@@ -8,7 +8,6 @@ import { AboutUsComponent } from './components/about-us/about-us.component';
 import { CategoriesPageComponent } from './pages/categories-page/categories-page.component';
 import { CategoryComponent } from './components/category/category.component';
 import { CoursesPageComponent } from './pages/courses-page/courses-page.component';
-import { CourseComponent } from './components/course/course.component';
 import { CourseDetailsPageComponent } from './pages/course-details-page/course-details-page.component';
 import { CourseInfoComponent } from './components/course-info/course-info.component';
 import { TagComponent } from './components/tag/tag.component';
@@ -23,7 +22,6 @@ import { ReviewComponent } from './components/review/review.component';
     CategoriesPageComponent,
     CategoryComponent,
     CoursesPageComponent,
-    CourseComponent,
     CourseDetailsPageComponent,
     CourseInfoComponent,
     TagComponent,

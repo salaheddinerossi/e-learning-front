@@ -1,0 +1,9 @@
+<div class="quiz-container">
+    <app-explanatory-quiz-form
+            [quizForm]="quizForm"
+            (addQuestion)="addQuestion()"
+            (removeQuestion)="removeQuestion($event)"
+            (removeForm)="removeForm()"
+            (submitForm)="onSubmit()">
+    </app-explanatory-quiz-form>
+</div>

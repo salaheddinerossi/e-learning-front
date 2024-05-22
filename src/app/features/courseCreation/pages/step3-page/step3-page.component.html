@@ -16,10 +16,14 @@
     <form [formGroup]="lessonForm"  class="w-full">
       <div class="mb-5">
         <app-text-input formControlName="title" placeholder="title"></app-text-input>
+        <app-form-errors [control]="lessonForm.get('title')!"></app-form-errors>
+
       </div>
 
       <div class="mb-5">
         <app-text-area-input formControlName="description" placeholder="description"></app-text-area-input>
+        <app-form-errors [control]="lessonForm.get('description')!"></app-form-errors>
+
       </div>
       <button
         *ngIf="!updateForm"
@@ -100,10 +104,46 @@
       </div>
     </div>
 
-    <div class="flex justify-end my-6" >
-      <app-small-button [routerLink]="'/step2/'+courseId!" [buttonText]="'modify chapters'"></app-small-button>
+    <app-left-title [title]="'Manual quizzes:'"></app-left-title>
+    <div class="flex">
+      <div >
+        <app-small-button [buttonText]="'True False quiz'"  (click)="addQuizContainer()"></app-small-button>
+      </div>
+      <div class="ml-4">
+        <app-small-button [buttonText]="'Explanatory Quiz'"  (click)="addExplanatory()"></app-small-button>
+      </div>
+      <div class="ml-3">
+        <app-small-button [buttonText]="'Multiple choice Quiz'"  (click)="addMultipleChoiceQuiz()"></app-small-button>
+      </div>
     </div>
 
+    <div *ngFor="let quizContainer of quizContainers; let i = index" class="my-6">
+      <app-true-false-quiz-container
+        (removeQuiz)="removeQuiz(i)"
+      ></app-true-false-quiz-container>
+    </div>
+
+    <div *ngFor="let explanatoryQuiz of explanatoryQuiz; let i = index" class="my-6">
+      <app-explanatory-quiz-container
+        (removeQuiz)="removeExplanatoryQuiz(i)"
+      ></app-explanatory-quiz-container>
+    </div>
+
+    <div *ngFor="let multipleChoiceQuiz of multipleChoiceQuiz; let i = index" class="my-6">
+      <app-multi-choice-quiz-container
+        (removeQuiz)="removeMultipleChoiceQuiz(i)"
+        (submitQuiz)="createManualMultipleChoiceQuiz($event)"
+      ></app-multi-choice-quiz-container>
+    </div>
+
+    <div class="flex justify-end my-6" >
+      <app-small-button
+        [routerLink]="'/step2/'+courseId!"
+        [buttonText]="'modify chapters'"
+      ></app-small-button>
+    </div>
   </div>
 
 </div>
+
+

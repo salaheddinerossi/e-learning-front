@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import {Injectable} from '@angular/core';
 import {ApiService} from "../../../core/services/api.service";
 import {environment} from "../../../../environment";
 import {MultiChoiceQuiz} from "../models/quizzes/MultiChoiceQuiz";
@@ -12,29 +12,36 @@ import {ExplanatoryQuiz} from "../models/quizzes/ExplanatoryQuiz";
 })
 export class QuizService {
 
-  constructor(private apiService:ApiService) { }
-
-  updateMultipleChoiceQuiz(form:any,id:number):Observable<ApiResponse<MultiChoiceQuiz>>{
-    return this.apiService.put(environment.services.courseCreationService,"quiz/multipleChoice/modify/"+id,form);
+  constructor(private apiService: ApiService) {
   }
 
-  updateTrueFalseQuiz(form:any,id:number):Observable<ApiResponse<TrueFalseQuiz>> {
-    return  this.apiService.put(environment.services.courseCreationService,"quiz/TrueFalse/modify/"+id,form);
+  updateMultipleChoiceQuiz(form: any, id: number): Observable<ApiResponse<MultiChoiceQuiz>> {
+    return this.apiService.put(environment.services.courseCreationService, "quiz/multipleChoice/modify/" + id, form);
   }
 
-  updateExplanatoryQuiz(form:any,id:number):Observable<ApiResponse<ExplanatoryQuiz>>{
-    return this.apiService.put(environment.services.courseCreationService,"quiz/explanatory/modify/"+id,form);
+  updateTrueFalseQuiz(form: any, id: number): Observable<ApiResponse<TrueFalseQuiz>> {
+    return this.apiService.put(environment.services.courseCreationService, "quiz/TrueFalse/modify/" + id, form);
   }
 
-  createMultipleChoiceQuiz(lessonId:number):Observable<ApiResponse<MultiChoiceQuiz>>{
-    return this.apiService.post(environment.services.courseCreationService,"quiz/multipleChoice/"+lessonId,{});
+  updateExplanatoryQuiz(form: any, id: number): Observable<ApiResponse<ExplanatoryQuiz>> {
+    return this.apiService.put(environment.services.courseCreationService, "quiz/explanatory/modify/" + id, form);
   }
 
-  createTrueFalseQuiz(lessonId:number):Observable<ApiResponse<TrueFalseQuiz>>{
-    return this.apiService.post(environment.services.courseCreationService,"quiz/TrueFalse/"+lessonId,{});
+  createMultipleChoiceQuiz(lessonId: number): Observable<ApiResponse<MultiChoiceQuiz>> {
+    return this.apiService.post(environment.services.courseCreationService, "quiz/multipleChoice/" + lessonId, {});
   }
 
-    createExplanatoryQuiz(lessonId:number):Observable<ApiResponse<ExplanatoryQuiz>>{
-        return this.apiService.post(environment.services.courseCreationService,"quiz/explanatory/"+lessonId,{});
-    }
+  createTrueFalseQuiz(lessonId: number): Observable<ApiResponse<TrueFalseQuiz>> {
+    return this.apiService.post(environment.services.courseCreationService, "quiz/TrueFalse/" + lessonId, {});
+  }
+
+  createExplanatoryQuiz(lessonId: number): Observable<ApiResponse<ExplanatoryQuiz>> {
+    return this.apiService.post(environment.services.courseCreationService, "quiz/explanatory/" + lessonId, {});
+  }
+
+
+  createManualMultipleChoice(lessonId:number,form:any):Observable<ApiResponse<MultiChoiceQuiz>>{
+    return this.apiService.post(environment.services.courseCreationService, "quiz/multipleChoice/manual/" + lessonId, form);
+  }
+
 }

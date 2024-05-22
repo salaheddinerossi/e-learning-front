@@ -2,13 +2,11 @@ import {Component, OnInit} from '@angular/core';
 import {CourseService} from "../../services/course.service";
 import {ActivatedRoute} from "@angular/router";
 import {CategoryCourses} from "../../models/CategoryCourses";
-import {NavbarType} from "../../../../shared/enums/navbar-type";
 import {environment} from "../../../../../environment";
 import {CategoryService} from "../../services/category.service";
 import {CategoryName} from "../../models/CategoryName";
 import {ErrorData} from "../../../../shared/models/ErrorData";
 import {HttpErrorResponse} from "@angular/common/http";
-import {error} from "@angular/compiler-cli/src/transformers/util";
 
 @Component({
   selector: 'app-courses-page',

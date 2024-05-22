@@ -16,36 +16,51 @@ import {ErrorData} from "../../../../shared/models/ErrorData";
   templateUrl: './step3-page.component.html',
   styleUrl: './step3-page.component.css'
 })
-export class Step3PageComponent implements OnInit{
+export class Step3PageComponent implements OnInit {
 
   protected readonly environment = environment;
-  lessonForm:FormGroup;
-  chapterId!:string;
-  usesAI:boolean=false;
-  advices:string[]=[];
-  summary?:string;
-  lessonId?:number;
-  updateForm:boolean=false;
-  quizzes!:QuizzesResponse;
-  courseId?:number;
+  lessonForm: FormGroup;
+  chapterId!: string;
+  usesAI: boolean = false;
+  advices: string[] = [];
+  summary?: string;
+  lessonId?: number;
+  updateForm: boolean = false;
+  quizzes!: QuizzesResponse;
+  courseId?: number;
+  quizContainers: number[] = [];
+  explanatoryQuiz: number[] = [];
+  multipleChoiceQuiz: number[] = [];
 
-    isUpdate = false
-    loading: boolean = true;
-    hasError: boolean = false;
+  addQuizContainer() {
+    this.quizContainers.push(this.quizContainers.length);
+  }
 
-    error:ErrorData = {
-        errorTitle:environment.notFound.lessonNotFound,
-        errorDescription:environment.notFound.lessonNotFoundDescription
-    }
+  addExplanatory() {
+    this.explanatoryQuiz.push(this.explanatoryQuiz.length);
+  }
+
+  addMultipleChoiceQuiz() {
+    this.multipleChoiceQuiz.push(this.explanatoryQuiz.length);
+  }
+
+  isUpdate = false
+  loading: boolean = true;
+  hasError: boolean = false;
+
+  error: ErrorData = {
+    errorTitle: environment.notFound.lessonNotFound,
+    errorDescription: environment.notFound.lessonNotFoundDescription
+  }
 
 
-    constructor(private fb:FormBuilder,private route:ActivatedRoute,private toaster:ToastrService,private lessonService:LessonService,private quizService:QuizService) {
-    this.lessonForm=this.fb.group({
-      title:["",Validators.required],
-      description:["",Validators.required],
-      chapterId:["",Validators.required],
-      material:["https://www.youtube.com/watch?v=x7X9w_GIm1s&ab_channel=Fireship"],
-      usesAI:[""]
+  constructor(private fb: FormBuilder, private route: ActivatedRoute, private toaster: ToastrService, private lessonService: LessonService, private quizService: QuizService) {
+    this.lessonForm = this.fb.group({
+      title: ["", Validators.required],
+      description: ["", Validators.required],
+      chapterId: ["", Validators.required],
+      material: ["https://www.youtube.com/watch?v=x7X9w_GIm1s&ab_channel=Fireship"],
+      usesAI: [""]
     })
 
 
@@ -54,17 +69,17 @@ export class Step3PageComponent implements OnInit{
   ngOnInit() {
     this.route.params.subscribe(
       params => {
-        this.chapterId= params['id'];
+        this.chapterId = params['id'];
 
         this.getCourseId(Number(this.chapterId));
         this.lessonForm.patchValue({
-          chapterId:Number(this.chapterId)
+          chapterId: Number(this.chapterId)
         })
 
         this.lessonId = params["lessonId"]
-        if (this.lessonId){
-            this.isUpdate = true;
-          this.updateForm=true;
+        if (this.lessonId) {
+          this.isUpdate = true;
+          this.updateForm = true;
           this.getCourseDetails(this.lessonId)
 
 
@@ -83,65 +98,64 @@ export class Step3PageComponent implements OnInit{
     }
   }
 
-  onSubmitAi(){
+  onSubmitAi() {
     this.lessonForm.patchValue({
       usesAI: true
     });
     this.onSubmit();
   }
 
-  onSubmitLesson(){
+  onSubmitLesson() {
     this.lessonForm.patchValue({
       usesAI: false
     });
     this.onSubmit();
   }
 
-  onSubmit(){
-    if(this.lessonForm.invalid){
+  onSubmit() {
+    if (this.lessonForm.invalid) {
       this.toaster.error("form is not valid")
       this.lessonForm.markAllAsTouched();
       return;
     }
-    if (this.lessonForm.valid){
+    if (this.lessonForm.valid) {
       this.createLesson(this.lessonForm.value);
     }
   }
 
-  createLesson(form:any){
+  createLesson(form: any) {
 
     this.lessonService.createLesson(form).subscribe(
-        data => {
-          this.usesAI=data.data.usesAI;
-          this.advices=data.data.advices;
-          this.summary = data.data.summary;
-          this.lessonId= data.data.id;
-          this.toaster.success("lesson has been added");
-        },
-        error => {
-          this.toaster.error(error.error.message)
-        }
-    )
-  }
-
-  regenerateSummary(form:any){
-    this.lessonService.regenerateSummary(form,this.lessonId!).subscribe(
       data => {
-        this.summary=data.data.summary;
-        this.toaster.success("summary has been regenerated");
-      },error => {
+        this.usesAI = data.data.usesAI;
+        this.advices = data.data.advices;
+        this.summary = data.data.summary;
+        this.lessonId = data.data.id;
+        this.toaster.success("lesson has been added");
+      },
+      error => {
         this.toaster.error(error.error.message)
-    }
+      }
     )
   }
 
-  getCourseDetails(lessonId:number){
-    this.lessonService.getLessonDetails(lessonId).subscribe(
+  regenerateSummary(form: any) {
+    this.lessonService.regenerateSummary(form, this.lessonId!).subscribe(
+      data => {
+        this.summary = data.data.summary;
+        this.toaster.success("summary has been regenerated");
+      }, error => {
+        this.toaster.error(error.error.message)
+      }
+    )
+  }
 
+  getCourseDetails(lessonId: number) {
+    this.lessonService.getLessonDetails(lessonId).subscribe(
       data => {
 
 
-        if (data.data){
+        if (data.data) {
           this.lessonForm.patchValue({
             title: data.data.title,
             description: data.data.description,
@@ -153,156 +167,183 @@ export class Step3PageComponent implements OnInit{
           this.advices = data.data.advices;
           this.summary = data.data.summary;
           this.lessonId = data.data.id;
-          this.quizzes=data.data.quizzesResponse;
+          this.quizzes = data.data.quizzesResponse;
 
-          this.loading=false;
+          this.loading = false;
 
         }
       }, error => {
         this.toaster.error(error.error.message)
-        this.hasError=true;
-        this.loading=false;
+        this.hasError = true;
+        this.loading = false;
 
-        }
+      }
     )
   }
 
-  updateLesson(form:any){
-    return this.lessonService.updateCourseDetails(this.lessonId!,form).subscribe(
-        () => {
+  updateLesson(form: any) {
+    return this.lessonService.updateCourseDetails(this.lessonId!, form).subscribe(
+      () => {
         this.toaster.success("form has been updated")
-      },error =>{
-            this.toaster.error(error.error.message)
-        }
+      }, error => {
+        this.toaster.error(error.error.message)
+      }
     )
   }
 
-  updateMultipleChoiceQuiz(form: FormGroup){
+  updateMultipleChoiceQuiz(form: FormGroup) {
 
     let formCopy = {...form.value};
 
     delete formCopy.quizId
 
-      this.quizService.updateMultipleChoiceQuiz(formCopy,form.value.quizId).subscribe(
-          data => {
-              if (data?.data && this.quizzes?.multipleChoiceQuizzes) {
-                  this.quizzes.multipleChoiceQuizzes = this.quizzes.multipleChoiceQuizzes.map(quiz => {
-                      return quiz?.id === data.data?.id ? data.data : quiz;
-                  }).filter(Boolean) as MultiChoiceQuiz[];
-              }
+    this.quizService.updateMultipleChoiceQuiz(formCopy, form.value.quizId).subscribe(
+      data => {
+        if (data?.data && this.quizzes?.multipleChoiceQuizzes) {
+          this.quizzes.multipleChoiceQuizzes = this.quizzes.multipleChoiceQuizzes.map(quiz => {
+            return quiz?.id === data.data?.id ? data.data : quiz;
+          }).filter(Boolean) as MultiChoiceQuiz[];
+        }
 
-              this.toaster.success("Quiz has been updated")
-          },error => {
-              this.toaster.error(error.error.message)
-          }
-      );
+        this.toaster.success("Quiz has been updated")
+      }, error => {
+        this.toaster.error(error.error.message)
+      }
+    );
   }
 
-    updateTrueFalseQuiz(form: FormGroup){
+  updateTrueFalseQuiz(form: FormGroup) {
 
-        let formCopy = {...form.value};
+    let formCopy = {...form.value};
 
-        delete formCopy.quizId
+    delete formCopy.quizId
 
-        this.quizService.updateTrueFalseQuiz(formCopy,form.value.quizId).subscribe(
-            data => {
-                if (data?.data && this.quizzes?.trueFalseQuizzes) {
-                    this.quizzes.trueFalseQuizzes = this.quizzes.trueFalseQuizzes.map(quiz => {
-                        return quiz?.id === data.data?.id ? data.data : quiz;
-                    }).filter(Boolean) as TrueFalseQuiz[];
-                }
-                this.toaster.success("Quiz has been updated")
-            },error => {
-                this.toaster.error(error.error.message)
-            }
-        );
-    }
+    this.quizService.updateTrueFalseQuiz(formCopy, form.value.quizId).subscribe(
+      data => {
+        if (data?.data && this.quizzes?.trueFalseQuizzes) {
+          this.quizzes.trueFalseQuizzes = this.quizzes.trueFalseQuizzes.map(quiz => {
+            return quiz?.id === data.data?.id ? data.data : quiz;
+          }).filter(Boolean) as TrueFalseQuiz[];
+        }
+        this.toaster.success("Quiz has been updated")
+      }, error => {
+        this.toaster.error(error.error.message)
+      }
+    );
+  }
 
-    updateExplanatoryQuiz(form: FormGroup){
+  updateExplanatoryQuiz(form: FormGroup) {
 
-        let formCopy = {...form.value};
+    let formCopy = {...form.value};
 
-        delete formCopy.quizId
+    delete formCopy.quizId
 
-        this.quizService.updateExplanatoryQuiz(formCopy,form.value.quizId).subscribe(
-            data => {
-                if (data?.data && this.quizzes?.explanatoryQuizzes) {
-                    this.quizzes.explanatoryQuizzes = this.quizzes.explanatoryQuizzes.map(quiz => {
-                        return quiz?.id === data.data?.id ? data.data : quiz;
-                    }).filter(Boolean) as ExplanatoryQuiz[];
-                }
-                this.toaster.success("Quiz has been updated")
-            },error => {
-                this.toaster.error(error.error.message)
-            }
-        );
-    }
+    this.quizService.updateExplanatoryQuiz(formCopy, form.value.quizId).subscribe(
+      data => {
+        if (data?.data && this.quizzes?.explanatoryQuizzes) {
+          this.quizzes.explanatoryQuizzes = this.quizzes.explanatoryQuizzes.map(quiz => {
+            return quiz?.id === data.data?.id ? data.data : quiz;
+          }).filter(Boolean) as ExplanatoryQuiz[];
+        }
+        this.toaster.success("Quiz has been updated")
+      }, error => {
+        this.toaster.error(error.error.message)
+      }
+    );
+  }
 
-    createMultipleChoiceQuiz(){
-        this.quizService.createMultipleChoiceQuiz(this.lessonId!).subscribe(
-            data => {
-                if (data?.data && this.quizzes?.multipleChoiceQuizzes) {
-                    this.quizzes.multipleChoiceQuizzes.push(data.data);
-                }
-                this.toaster.success("Quiz has been created")
+  createMultipleChoiceQuiz() {
+    this.quizService.createMultipleChoiceQuiz(this.lessonId!).subscribe(
+      data => {
+        if (data?.data && this.quizzes?.multipleChoiceQuizzes) {
+          this.quizzes.multipleChoiceQuizzes.push(data.data);
+        }
+        this.toaster.success("Quiz has been created")
 
-            },error => {
-                this.toaster.error(error.error.message)
-            }
-        );
-    }
+      }, error => {
+        this.toaster.error(error.error.message)
+      }
+    );
+  }
 
-    createTrueFalseQuiz(){
-        this.quizService.createTrueFalseQuiz(this.lessonId!).subscribe(
-            data => {
-                if (data?.data && this.quizzes?.trueFalseQuizzes) {
-                    this.quizzes.trueFalseQuizzes.push(data.data);
-                }
-                this.toaster.success("Quiz has been created")
-            },error => {
-                this.toaster.error(error.error.message)
-            }
-        );
-    }
+  createTrueFalseQuiz() {
+    this.quizService.createTrueFalseQuiz(this.lessonId!).subscribe(
+      data => {
+        if (data?.data && this.quizzes?.trueFalseQuizzes) {
+          this.quizzes.trueFalseQuizzes.push(data.data);
+        }
+        this.toaster.success("Quiz has been created")
+      }, error => {
+        this.toaster.error(error.error.message)
+      }
+    );
+  }
 
-    createExplanatoryQuiz(){
-        this.quizService.createExplanatoryQuiz(this.lessonId!).subscribe(
-            data => {
-                if (data?.data && this.quizzes?.explanatoryQuizzes) {
-                    this.quizzes.explanatoryQuizzes.push(data.data);
-                }
-                this.toaster.success("Quiz has been created")
-            },error => {
-                this.toaster.error(error.error.message)
-            }
-        );
-    }
+  createExplanatoryQuiz() {
+    this.quizService.createExplanatoryQuiz(this.lessonId!).subscribe(
+      data => {
+        if (data?.data && this.quizzes?.explanatoryQuizzes) {
+          this.quizzes.explanatoryQuizzes.push(data.data);
+        }
+        this.toaster.success("Quiz has been created")
+      }, error => {
+        this.toaster.error(error.error.message)
+      }
+    );
+  }
 
-    onFormUpdate(){
-    if(this.lessonForm.invalid){
+  onFormUpdate() {
+    if (this.lessonForm.invalid) {
       this.toaster.error("form is not valid")
       this.lessonForm.markAllAsTouched();
       return;
     }
-    if (this.lessonForm.valid){
+    if (this.lessonForm.valid) {
       this.updateLesson(this.lessonForm.value);
     }
   }
 
-    getCourseId(chapterId:number){
-        this.lessonService.getCourseId(chapterId).subscribe(
-            data => {
-                if (data.data) {
-                    this.courseId = data.data;
-                    console.log(this.courseId)
-                }
-            },
-            error => {
-                console.error('Error loading course id:', error.error);
-                this.toaster.error('Failed to load course id.');
-            }
-        );
+  getCourseId(chapterId: number) {
+    this.lessonService.getCourseId(chapterId).subscribe(
+      data => {
+        if (data.data) {
+          this.courseId = data.data;
+          console.log(this.courseId)
+        }
+      },
+      error => {
+        console.error('Error loading course id:', error.error);
+        this.toaster.error('Failed to load course id.');
+      }
+    );
 
-    }
+  }
+
+  removeQuiz(index: number) {
+    this.quizContainers.splice(index, 1);
+  }
+
+  removeExplanatoryQuiz(index: number) {
+    this.explanatoryQuiz.splice(index, 1);
+  }
+
+  removeMultipleChoiceQuiz(index: number) {
+    this.multipleChoiceQuiz.splice(index, 1);
+  }
+
+  createManualMultipleChoiceQuiz(form: any) {
+    this.quizService.createManualMultipleChoice(this.lessonId!,form).subscribe(
+      data => {
+        if (data?.data && this.quizzes?.multipleChoiceQuizzes) {
+          this.quizzes.multipleChoiceQuizzes.push(data.data);
+        }
+        this.toaster.success("Quiz has been created")
+
+      }, error => {
+        this.toaster.error(error.error.message)
+      }
+    )
+  }
+
 
 }

@@ -9,11 +9,15 @@
     <div class="flex flex-col md:flex-row items-stretch ">
       <div class="w-full sm:w-full md:mr-2 mb-3 ">
         <app-text-input [placeholder]="'title'" formControlName="title" ></app-text-input>
+        <app-form-errors [control]="categoryForm.get('title')!"></app-form-errors>
+
       </div>
     </div>
 
     <div class="mb-3">
       <app-text-area-input [placeholder]="'Description'"  formControlName="description"></app-text-area-input>
+      <app-form-errors [control]="categoryForm.get('description')!"></app-form-errors>
+
     </div>
 
     <div class="mb-3" *ngIf="!isUpdate">
@@ -22,6 +26,8 @@
               formControlName="containsCategories"
               [options]="typeOptions"
       ></app-select-input>
+      <app-form-errors [control]="categoryForm.get('containsCategories')!"></app-form-errors>
+
     </div>
 
     <div formArrayName="categoriesForm" *ngIf="!isUpdate">

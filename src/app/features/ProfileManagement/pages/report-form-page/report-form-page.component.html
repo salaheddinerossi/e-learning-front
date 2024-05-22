@@ -1,1 +1,25 @@
-<p>report-form-page works!</p>
+<app-navbar></app-navbar>
+<div class="my-12">
+    <app-middle-title [headTitle]="environment.reportFormPage.headTitle" [subTitle]="environment.reportFormPage.subTitle"></app-middle-title>
+</div>
+
+<div class="container mx-auto">
+    <form [formGroup]="reportForm" (ngSubmit)="onSubmit()" >
+
+        <div class="w-full my-5">
+            <app-text-input [placeholder]="'title'" formControlName="title"></app-text-input>
+          <app-form-errors [control]="reportForm.get('title')!"></app-form-errors>
+
+        </div>
+        <div class="w-full my-5">
+            <app-text-area-input [placeholder]="'text'" formControlName="text"></app-text-area-input>
+          <app-form-errors [control]="reportForm.get('text')!"></app-form-errors>
+
+        </div>
+
+        <div class="text-center">
+            <app-small-button [buttonText]="'submit'" ></app-small-button>
+        </div>
+
+    </form>
+</div>
