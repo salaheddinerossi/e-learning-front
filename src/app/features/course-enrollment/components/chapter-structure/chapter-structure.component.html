@@ -1,0 +1,32 @@
+<div *ngIf="chapter" class="  rounded-md mx-4 mt-4 ">
+  <div class="flex">
+    <h3 class="font-medium text-lg text-white  mb-2">{{ chapter.title }}</h3>
+  </div>
+
+  <ul class="list-disc pl-5 space-y-2">
+    <!-- Check if the chapter contains child chapters -->
+    <ng-container *ngIf="chapter.containsChapters; else lessonsTemplate">
+      <li *ngFor="let childChapter of chapter.chapterResponses" class="mb-2 list-none text-white flex">
+        <app-chapter-structure [chapter]="childChapter"></app-chapter-structure>
+      </li>
+    </ng-container>
+    <ng-template #lessonsTemplate>
+      <div class="mb-2">
+        <li *ngFor="let lesson of chapter.studentLessonStatusResponses" class="mb-2 list-none text-body-color flex font-light">
+          <span *ngIf="lesson.studentLessonStatus == 'INITIAL' && lesson.id != currentLessonId" (click)="goToLesson(lesson.id)" class="text-sm font-light text-gray-400 cursor-pointer" >{{ lesson.title }}</span>
+          <span *ngIf="lesson.studentLessonStatus == 'READ' && lesson.id != currentLessonId" (click)="goToLesson(lesson.id)" class="text-sm font-light text-white cursor-pointer" >{{ lesson.title }}</span>
+          <span *ngIf="lesson.id == currentLessonId && lesson.studentLessonStatus != 'COMPLETED' " (click)="goToLesson(lesson.id)" class="text-sm font-light text-primary cursor-pointer active-link" >{{ lesson.title }}</span>
+          <div class="flex" *ngIf="lesson.studentLessonStatus == 'COMPLETED' && lesson.id != currentLessonId">
+            <span (click)="goToLesson(lesson.id)" class="text-sm font-light text-white cursor-pointer" >{{ lesson.title }}</span>
+            <img src="assets/svgs/completed.svg" >
+          </div>
+          <div class="flex" *ngIf="lesson.studentLessonStatus == 'COMPLETED' && lesson.id == currentLessonId">
+            <span (click)="goToLesson(lesson.id)" class="text-sm font-light text-primary cursor-pointer" >{{ lesson.title }}</span>
+            <img src="assets/svgs/completedBlue.svg" >
+          </div>
+        </li>
+      </div>
+    </ng-template>
+  </ul>
+</div>
+

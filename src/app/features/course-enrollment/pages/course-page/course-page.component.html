@@ -1,0 +1,176 @@
+<div *ngIf="isError" class=" w-full ">
+  <app-navbar></app-navbar>
+  <app-not-found [error]="error"></app-not-found>
+</div>
+
+<div *ngIf="!isError" class="navBg">
+  <div class="flex flex-col h-screen">
+    <div class="py-6 my-auto px-5 navBg">
+      <ul class="flex items-center">
+        <app-breadcrumb [title]="'categories'" [link]="'/categories'"></app-breadcrumb>
+        <app-breadcrumb *ngFor="let categoryName of categoriesNames" [title]="categoryName.title" [link]="'/categories/'+ categoryName.id"></app-breadcrumb>
+        <app-breadcrumb [title]="courseEnrollment.categoryName" [isLastItem]="true" [isActive]="false"></app-breadcrumb>
+      </ul>
+    </div>
+    <div class="flex flex-wrap flex-grow">
+      <div class="w-2/12 flex flex-col">
+        <div class="chapterHeader py-4">
+          <h1 class="text-white pl-5">lessons</h1>
+        </div>
+        <div class="navBg flex-grow overflow-y-auto" style="max-height: calc(100vh - 8rem);">
+          <app-chapter-structure
+                  *ngFor="let chapter of courseEnrollment.chapterResponses" [chapter]="chapter"
+                  (passToLesson)="changeLesson($event)"
+                  [currentLessonId]="courseEnrollment.currentLessonId"
+          >
+          </app-chapter-structure>
+        </div>
+
+        <div  class="text-center py-4">
+          <app-small-button (buttonClick)="showReviewModal()" [buttonText]="'Add review'" *ngIf="!courseEnrollment.isReviewed && courseEnrollment.isCourseCompleted"></app-small-button>
+        </div>
+      </div>
+      <div class="w-7/12 flex flex-col">
+        <app-video-player [videoUrl]="lesson.material"></app-video-player>
+        <div class="notesBg flex-grow">
+          <div class=" chapterHeader text-white flex flex-col">
+            <div class="flex ml-6">
+              <div *ngIf="currentNav == 'notes'">
+                <a class="p-3 cursor-pointer notesBg" (click)="setNav('notes')">Notes</a>
+                <a class="p-3 cursor-pointer" (click)="setNav('summary')">Summary</a>
+              </div>
+              <div *ngIf="currentNav == 'summary'">
+                <a class="p-3 cursor-pointer " (click)="setNav('notes')">Notes</a>
+                <a class="p-3 cursor-pointer notesBg" (click)="setNav('summary')">Summary</a>
+              </div>
+            </div>
+
+          </div>
+          <div class="flex-grow text-white overflow-y-auto ">
+            <div *ngIf="currentNav == 'notes'">
+              <app-notes [notes]="studentLesson.courseNotesResponses" (addNoteEvent)="addNote($event)"></app-notes>
+            </div>
+
+            <div *ngIf="currentNav == 'summary'">
+              <h1 class="text-xs font-light m-5 bg-black px-5 py-3 rounded">
+                {{lesson.summary}}
+              </h1>
+            </div>
+            <div class="flex justify-end m-4">
+              <app-small-button (buttonClick)="setPassTheQuiz()" [buttonText]="'pass the quiz'"></app-small-button>
+            </div>
+          </div>
+
+        </div>
+      </div>
+      <div class="w-3/12 flex flex-col">
+        <div class="chapterHeader py-4">
+          <h1 class="text-white pl-5">Chat Assistant</h1>
+        </div>
+        <div class="navBg flex-grow flex flex-col text-white p-3 ">
+          <div #chatContainer class="overflow-y-auto h-screen" style="max-height: calc(100vh - 15rem);">
+            <div *ngFor="let chatRecord of studentLesson.chatHistoryResponseList"  >
+              <div *ngIf="chatRecord.fromAssistant" class="text-left">
+                <h1 class="userBackground my-2 text-xs p-2 rounded font-light"> {{chatRecord.content}}</h1>
+              </div>
+              <div *ngIf="!chatRecord.fromAssistant" class="text-right">
+                <h1 class="my-2 text-xs assistantBackground p-2 rounded font-light">{{chatRecord.content}}</h1>
+              </div>
+            </div>
+          </div>
+          <div class="mt-auto mx-2 mb-4">
+
+            <form (ngSubmit)="askChat(input.value,input)">
+              <div class="flex">
+            <textarea
+                    class="text-white textareaBg w-full outline-none px-3 py-2 border-0 text-sm"
+                    placeholder="Type your message here..."
+                    #input>
+            </textarea>
+                <button type="submit" class="h-full chapterHeader py-4 px-2">send </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <app-modal (goNextLesson)="loadNextLesson()" (cancel)="cancelLesson()" [title]="environment.lessonModal.title" [text]="environment.lessonModal.text" [submitButton]="environment.lessonModal.submitButton" *ngIf="lessonCompleted && !courseHasBeenCompleted"></app-modal>
+  <app-modal [isCourseCompletion]="true" (goNextLesson)="loadNextLesson()" (cancel)="cancelLesson()" [title]="environment.courseModal.title" [text]="environment.courseModal.text" [submitButton]="environment.courseModal.submitButton" *ngIf="courseHasBeenCompleted"></app-modal>
+  <app-review-form (cancel)="cancelReviewModal()" (submitForm)="submitReviewForm($event)"  *ngIf="ReviewIsShowed"></app-review-form>
+  <div *ngIf="passTheQuiz" class="chapterHeader">
+    <div class="container mx-auto">
+      <div class="flex justify-center">
+        <div class="my-8">
+          <h1 class="text-white text-2xl font-semibold text-center my-2 ">
+            Quizzes
+          </h1>
+          <h2 class="text-body-color">
+            browse categories and find what are you looking for
+          </h2>
+        </div>
+      </div>
+      <div *ngFor="let quiz of studentLesson.studentQuizResponses">
+        <div *ngIf="quiz.type == 'TrueFalse'" class="pb-7">
+          <div >
+            <div *ngIf="quiz.mark !== null" class="mb-6">
+              <div  class="felx justify-center text-center text-white mb-12 " >
+                <h1 *ngIf="quiz.isPassed" class="text-xl">quiz is passed</h1>
+                <h1 *ngIf="!quiz.isPassed" class="text-xl">quiz is not passed</h1>
+                <h2 class="text-2xl">Your mark is : {{quiz.mark}}/10</h2>
+              </div>
+              <h1 class="text-white text-lg" *ngIf="!quiz.isPassed">Here are some advices:</h1>
+              <h1 class="text-white text-lg" *ngIf="quiz.isPassed">Here are some advices to expand your knowledge:</h1>
+              <div class="ml-2">
+                <h2 class="text-white my-2 text-sm" *ngFor="let advice of quiz.advices">{{advice}}</h2>
+              </div>
+
+              <h1 *ngIf="quiz.isPassed==false" class="my-6 text-white text-lg">Try the quiz again:</h1>
+            </div>
+
+          </div>
+            <app-true-false-quiz-form-answer (submitTrueFalseQuiz)="correctTrueFalseQuiz($event,quiz.quiz_id)" *ngIf="!quiz.isPassed" [questionResponsesList]="quiz.questionResponsesList"></app-true-false-quiz-form-answer>
+        </div>
+        <div class="pb-7">
+          <div *ngIf="quiz.type == 'Explanatory'">
+            <div *ngIf="quiz.mark !== null" class="mb-6">
+              <div  class="felx justify-center text-center text-white mb-12 " >
+                <h1 *ngIf="quiz.isPassed" class="text-xl">quiz is passed</h1>
+                <h1 *ngIf="!quiz.isPassed" class="text-xl">quiz is not passed</h1>
+
+                <h2 class="text-2xl">Your mark is : {{quiz.mark}}/10</h2>
+              </div>
+              <h1 class="text-white text-lg" *ngIf="!quiz.isPassed">Here are some advices:</h1>
+              <h1 class="text-white text-lg" *ngIf="quiz.isPassed">Here are some advices to expand your knowledge:</h1>
+              <div class="ml-2">
+                <h2 class="text-white my-2 text-sm" *ngFor="let advice of quiz.advices">{{advice}}</h2>
+              </div>
+              <h1 *ngIf="quiz.isPassed==false" class="my-6 text-white text-lg">Try the quiz again:</h1>
+            </div>
+              <app-explanatory-quiz-form-answer (submitExplanatoryQuizForm)="correctExplanatoryQuiz($event,quiz.quiz_id)" *ngIf="!quiz.isPassed" [questionResponsesList]="quiz.questionResponsesList"></app-explanatory-quiz-form-answer>
+          </div>
+        </div>
+        <div class="pb-7">
+          <div *ngIf="quiz.type == 'MultipleChoice'">
+            <div *ngIf="quiz.mark !== null" class="mb-6">
+              <div  class="felx justify-center text-center text-white mb-12 " >
+                <h1 *ngIf="quiz.isPassed" class="text-xl">quiz is passed</h1>
+                <h1 *ngIf="!quiz.isPassed" class="text-xl">quiz is not passed</h1>
+
+                <h2 class="text-2xl">Your mark is : {{quiz.mark}}/10</h2>
+              </div>
+              <h1 class="text-white text-lg" *ngIf="!quiz.isPassed">Here are some advices:</h1>
+              <h1 class="text-white text-lg" *ngIf="quiz.isPassed">Here are some advices to expand your knowledge:</h1>
+              <div class="ml-2">
+                <h2 class="text-white my-2 text-sm" *ngFor="let advice of quiz.advices">{{advice}}</h2>
+              </div>
+              <h1 *ngIf="quiz.isPassed==false" class="my-6 text-white text-lg">Try the quiz again:</h1>
+            </div>
+            <app-multiple-choice-quiz-form-answer (submitMultipleChoiceQuiz)="correctExplanatoryQuiz($event,quiz.quiz_id)" *ngIf="!quiz.isPassed" [questionResponsesList]="quiz.questionResponsesList"></app-multiple-choice-quiz-form-answer>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </div>
+</div>

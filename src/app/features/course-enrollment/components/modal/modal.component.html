@@ -1,0 +1,50 @@
+<div
+        class="fixed top-0 left-0 flex items-center justify-center w-full h-full min-h-screen px-4 py-5 bg-dark/90"
+>
+    <div
+            class="w-full max-w-[570px] rounded-[20px] bg-white dark:bg-dark-2 py-12 px-8 text-center md:py-[60px] md:px-[70px]"
+    >
+        <h3
+                class="pb-[18px] text-xl font-semibold text-dark dark:text-white sm:text-2xl"
+        >
+            {{title}}
+        </h3>
+        <span
+                class="mx-auto mb-6 inline-block h-1 w-[90px] rounded bg-primary"
+        ></span>
+        <p
+                class="mb-10 text-base leading-relaxed text-body-color dark:text-dark-6"
+        >
+            {{text}}
+        </p>
+        <div class="flex flex-wrap -mx-3">
+            <div class="w-1/2 px-3">
+                <button
+                        (click)="cancelModal()"
+                        class="block w-full p-3 text-base font-medium text-center transition border rounded-md border-stroke text-dark dark:text-white hover:border-red-600 hover:bg-red-600 hover:text-white"
+                >
+                    Cancel
+                </button>
+            </div>
+            <div class="w-1/2 px-3">
+
+
+                <button
+                        *ngIf="isCourseCompletion"
+                        class="block w-full p-3 text-base font-medium text-center text-white transition border rounded-md border-primary bg-primary hover:bg-blue-dark"
+                        [routerLink]="'/student/profile'"
+                >
+                    {{submitButton}}
+                </button>
+
+                <button
+                        *ngIf="!isCourseCompletion"
+                        (click)="nextLesson()"
+                        class="block w-full p-3 text-base font-medium text-center text-white transition border rounded-md border-primary bg-primary hover:bg-blue-dark"
+                >
+                    {{submitButton}}
+                </button>
+            </div>
+        </div>
+    </div>
+</div>
