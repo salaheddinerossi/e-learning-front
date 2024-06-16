@@ -3,7 +3,8 @@
     <img
       src="{{courseDetails.image}}"
       alt="image"
-      class="w-full rounded"
+      class="w-full rounded h-[500px] bg-cover bg-center"
+
     >
   </div>
   <div class="flex-1 ml-5">
@@ -19,6 +20,9 @@
       <p class="font-semibold text-dark text-lg">{{environment.courseTitle.skills +" "}}</p>
       <h3 class=" text-dark text-lg">{{courseDetails.skillName}}</h3>
     </div>
-    <app-large-course-button [buttonText]="'Enroll the course'" [link]="'enrollment/'+courseDetails.id"></app-large-course-button>
+    <app-large-course-button *ngIf="isStudentHasCourse && isStudentLoggedIn" [buttonText]="'View course'" [link]="'/enrollment/'+courseEnrollmentId"></app-large-course-button>
+    <app-large-course-button *ngIf="!isStudentHasCourse && isStudentLoggedIn" [buttonText]="'Enroll the course'" (click)="enroll()" ></app-large-course-button>
+    <app-large-course-button *ngIf="!isStudentLoggedIn" (click)="mustLogin()" [buttonText]="'Enroll the course'" [routerLink]="'/login/student'"></app-large-course-button>
+
   </div>
 </div>

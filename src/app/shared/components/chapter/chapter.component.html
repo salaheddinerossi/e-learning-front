@@ -21,16 +21,15 @@
         <app-chapter (deleteChapterEvent)="deleteChapter($event)" [isUpdate]="isUpdate" [courseId]="courseId" [chapter]="childChapter"></app-chapter>
       </li>
     </ng-container>
-    <!-- Template for chapters that contain lessons -->
     <ng-template #lessonsTemplate>
       <div class="mb-2">
         <li *ngFor="let lesson of chapter.lessonCourseResponses" class="mb-2 list-none text-body-color flex">
           <span class="text-sm font-medium text-gray-700 cur">{{ lesson.title }}</span>
-          <div [routerLink]="'/step3/'+chapter.id+'/'+lesson.id">
+          <div *ngIf="isUpdate" [routerLink]="'/step3/'+chapter.id+'/'+lesson.id">
             <img class=" ml-3 w-6 h-6 cursor-pointer" src="assets/svgs/edit.svg" >
           </div>
 
-          <img (click)="deleteLesson(lesson.id)"  class=" mx-3 w-6 h-6 cursor-pointer" src="assets/svgs/delete.svg" >
+          <img *ngIf="isUpdate" (click)="deleteLesson(lesson.id)"  class=" mx-3 w-6 h-6 cursor-pointer" src="assets/svgs/delete.svg" >
         </li>
       </div>
     </ng-template>

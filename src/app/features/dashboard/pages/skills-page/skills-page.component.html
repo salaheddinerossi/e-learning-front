@@ -39,9 +39,14 @@
 
     </div>
 
-    <div class="flex justify-center" *ngIf="!isUpdate">
+    <app-file-input formControlName="image"></app-file-input>
+
+
+    <div class="flex justify-center mt-4" *ngIf="!isUpdate">
       <app-small-button [buttonText]="'Add Skill'"></app-small-button>
     </div>
+
+
 
     <div class="flex justify-center" *ngIf="isUpdate">
       <app-small-button [buttonText]="'Update Skill'"></app-small-button>

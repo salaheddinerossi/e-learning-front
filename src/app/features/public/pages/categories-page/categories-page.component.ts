@@ -3,9 +3,9 @@ import {environment} from "../../../../../environment";
 import {CategoryService} from "../../services/category.service";
 import {Category} from "../../models/Category";
 import {ActivatedRoute} from "@angular/router";
-import {CategoryName} from "../../models/CategoryName";
 import {ErrorData} from "../../../../shared/models/ErrorData";
 import {HttpErrorResponse} from "@angular/common/http";
+import {CategoryName} from "../../../../shared/models/CategoryName";
 
 @Component({
   selector: 'app-categories-page',
@@ -57,6 +57,7 @@ export class CategoriesPageComponent implements OnInit {
           this.mainTitle= data.data.title;
           this.currentCategoryId = data.data.id;
           this.loading= false;
+
 
         },
         error => {

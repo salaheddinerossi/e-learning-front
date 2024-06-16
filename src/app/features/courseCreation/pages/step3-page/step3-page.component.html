@@ -25,6 +25,8 @@
         <app-form-errors [control]="lessonForm.get('description')!"></app-form-errors>
 
       </div>
+
+      <app-file-input formControlName="material"></app-file-input>
       <button
         *ngIf="!updateForm"
         (click)="onSubmitAi()"
@@ -62,7 +64,7 @@
       </div>
     </div>
 
-    <div *ngIf="quizzes">
+    <div *ngIf="usesAI">
       <app-left-title [title]="'Quizzes:'"></app-left-title>
 
       <h1 class="ml-5 font-semibold text-body-color mt-6 mb-3">Generate quizzes:</h1>
@@ -83,8 +85,12 @@
 
       </div>
 
+    </div>
 
-      <div *ngIf="quizzes?.multipleChoiceQuizzes?.length!=0">
+    <div *ngIf="quizzes">
+
+
+      <div *ngIf="quizzes && quizzes?.multipleChoiceQuizzes?.length!=0">
         <h1 class="ml-5 font-semibold text-body-color mt-6 mb-3">Multiple Choice Quiz</h1>
         <div *ngFor=" let multipleChoiceQuiz of quizzes.multipleChoiceQuizzes">
           <app-multiple-choice-quiz  [multipleChoiceQuiz]="multipleChoiceQuiz" (regenerateSubmit)="updateMultipleChoiceQuiz($event)" ></app-multiple-choice-quiz>
@@ -104,37 +110,43 @@
       </div>
     </div>
 
-    <app-left-title [title]="'Manual quizzes:'"></app-left-title>
-    <div class="flex">
-      <div >
-        <app-small-button [buttonText]="'True False quiz'"  (click)="addQuizContainer()"></app-small-button>
+    <div *ngIf="usesAI">
+      <app-left-title [title]="'Manual quizzes:'"></app-left-title>
+      <div class="flex">
+        <div >
+          <app-small-button [buttonText]="'True False quiz'"  (click)="addQuizContainer()"></app-small-button>
+        </div>
+        <div class="ml-4">
+          <app-small-button [buttonText]="'Explanatory Quiz'"  (click)="addExplanatory()"></app-small-button>
+        </div>
+        <div class="ml-3">
+          <app-small-button [buttonText]="'Multiple choice Quiz'"  (click)="addMultipleChoiceQuiz()"></app-small-button>
+        </div>
       </div>
-      <div class="ml-4">
-        <app-small-button [buttonText]="'Explanatory Quiz'"  (click)="addExplanatory()"></app-small-button>
+
+      <div *ngFor="let quizContainer of quizContainers; let i = index" class="my-6">
+        <app-true-false-quiz-container
+          (removeQuiz)="removeQuiz(i)"
+          (submitQuiz)="createTrueFalseManualQuiz($event)"
+        ></app-true-false-quiz-container>
       </div>
-      <div class="ml-3">
-        <app-small-button [buttonText]="'Multiple choice Quiz'"  (click)="addMultipleChoiceQuiz()"></app-small-button>
+
+      <div *ngFor="let explanatoryQuiz of explanatoryQuiz; let i = index" class="my-6">
+        <app-explanatory-quiz-container
+          (removeQuiz)="removeExplanatoryQuiz(i)"
+          (submitQuiz)="createExplanatoryManualQuiz($event)"
+        ></app-explanatory-quiz-container>
       </div>
+
+      <div *ngFor="let multipleChoiceQuiz of multipleChoiceQuiz; let i = index" class="my-6">
+        <app-multi-choice-quiz-container
+          (removeQuiz)="removeMultipleChoiceQuiz(i)"
+          (submitQuiz)="createManualMultipleChoiceQuiz($event)"
+        ></app-multi-choice-quiz-container>
+      </div>
+
     </div>
 
-    <div *ngFor="let quizContainer of quizContainers; let i = index" class="my-6">
-      <app-true-false-quiz-container
-        (removeQuiz)="removeQuiz(i)"
-      ></app-true-false-quiz-container>
-    </div>
-
-    <div *ngFor="let explanatoryQuiz of explanatoryQuiz; let i = index" class="my-6">
-      <app-explanatory-quiz-container
-        (removeQuiz)="removeExplanatoryQuiz(i)"
-      ></app-explanatory-quiz-container>
-    </div>
-
-    <div *ngFor="let multipleChoiceQuiz of multipleChoiceQuiz; let i = index" class="my-6">
-      <app-multi-choice-quiz-container
-        (removeQuiz)="removeMultipleChoiceQuiz(i)"
-        (submitQuiz)="createManualMultipleChoiceQuiz($event)"
-      ></app-multi-choice-quiz-container>
-    </div>
 
     <div class="flex justify-end my-6" >
       <app-small-button

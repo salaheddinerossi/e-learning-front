@@ -4,7 +4,7 @@
     <div *ngFor="let question of questions.controls; index as i">
       <div [formGroupName]="i">
         <div class="my-4">
-          <app-text-input formControlName="questionText"  placeholder="Enter question text"></app-text-input>
+          <app-text-input formControlName="prompt"  placeholder="Enter question text"></app-text-input>
         </div>
         <div class="my-4">
           <app-select-input
@@ -13,13 +13,13 @@
             [options]="options"
           ></app-select-input>
         </div>
-        <button class="bg-red-500 text-white rounded py-2 px-4 mb-6" (click)="onRemoveQuestion(i)">Remove Question</button>
+        <button class="bg-red-500 text-white rounded py-2 px-4 mb-6" (click)="onRemoveQuestion(i);$event.preventDefault();">Remove Question</button>
       </div>
     </div>
   </div>
 
-  <button class="bg-dark text-white px-4 py-2 rounded" (click)="onAddQuestion()">Add Question</button>
+  <button class="bg-dark text-white px-4 py-2 rounded" (click)="onAddQuestion();$event.preventDefault();">Add Question</button>
   <button class="ml-4 bg-primary text-white px-4 py-2 rounded" *ngIf="questions.length!=0" type="submit">Submit</button>
-  <button class="ml-4 bg-red-500 text-white px-4 py-2 rounded"  (click)="onRemoveQuiz()">Remove quiz</button>
+  <button class="ml-4 bg-red-500 text-white px-4 py-2 rounded"  (click)="onRemoveQuiz();$event.preventDefault();">Remove quiz</button>
 </form>
 

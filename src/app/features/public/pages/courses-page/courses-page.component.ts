@@ -4,9 +4,9 @@ import {ActivatedRoute} from "@angular/router";
 import {CategoryCourses} from "../../models/CategoryCourses";
 import {environment} from "../../../../../environment";
 import {CategoryService} from "../../services/category.service";
-import {CategoryName} from "../../models/CategoryName";
 import {ErrorData} from "../../../../shared/models/ErrorData";
 import {HttpErrorResponse} from "@angular/common/http";
+import {CategoryName} from "../../../../shared/models/CategoryName";
 
 @Component({
   selector: 'app-courses-page',

@@ -10,13 +10,13 @@ export const environment={
 
   teacherNavLinks: [
     { title: 'Home', link: '/' },
-    { title: 'profile', link: '/teacher' },
+    { title: 'profile', link: '/teacher/profile' },
     { title: 'Create Course ', link: '/start' },
     { title: 'Report', link: '/report' }
   ],
   studentNavLinks: [
     { title: 'Home', link: '/' },
-    { title: 'profile', link: '/student' },
+    { title: 'profile', link: '/student/profile' },
     { title: 'categories ', link: '/categories' },
     { title: 'Report', link: '/report' }
   ],
@@ -92,6 +92,8 @@ export const environment={
     chaptersNotFoundDescription:"no course found with this id, and cannot contain chapters",
     lessonNotFound:"Lesson not found",
     lessonNotFoundDescription:"no lesson found with this id",
+    enrollmentNotFound:"Enrollment not found",
+    enrollmentNotFoundDescription:"no Enrollment found with this id",
 
   },
 
@@ -228,6 +230,16 @@ export const environment={
   teacherProfile:{
     headTitle:"Teacher profile",
     subTitle:"modify your profile and view your personal information"
+  },
+  lessonModal:{
+    title:"You have completed this lesson",
+    text:"congratulations you have completed this lesson you can click bellow to study the next lesson",
+    submitButton:"Next lesson",
+  },
+  courseModal:{
+    title:"You have completed this course",
+    text:"congratulations you have completed this course you can click bellow to view your new added skills",
+    submitButton:"view profile",
   }
 
 

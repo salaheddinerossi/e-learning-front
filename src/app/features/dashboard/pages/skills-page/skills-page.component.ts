@@ -21,11 +21,16 @@ export class SkillsPageComponent implements OnInit{
 
   currentSkill?:SkillResponse;
 
-  constructor(private skillService:SkillService , private fb:FormBuilder, private toasterService:ToastrService,private  courseService:CourseService) {
+  constructor(private skillService: SkillService, private fb: FormBuilder, private toasterService: ToastrService, private courseService: CourseService) {
     this.skillForm = this.fb.group({
       name: ['', Validators.required],
       skillLevel: ['', Validators.required],
       skillDescription: ['', Validators.required],
+      image: ['', Validators.required]
+    });
+
+    this.skillForm.get('image')?.valueChanges.subscribe((file: File) => {
+      this.checkFileType(file);
     });
   }
 
@@ -45,36 +50,41 @@ export class SkillsPageComponent implements OnInit{
   }
 
   onSubmit() {
-    if (this.skillForm.invalid){
-      this.toasterService.error("this form is not valid");
+    if (this.skillForm.invalid) {
+      this.toasterService.error("This form is not valid");
       this.skillForm.markAllAsTouched();
       return;
     }
 
-    if (this.skillForm.valid && !this.isUpdate ){
+    if (this.skillForm.valid && !this.isUpdate) {
       this.createSkill(this.skillForm.value);
       return;
     }
 
-    if (this.skillForm.valid && this.isUpdate ) {
-      console.log(this.currentSkill!.id,this.skillForm.value)
-      this.updateSkill(this.skillForm.value,this.currentSkill!.id);
+    if (this.skillForm.valid && this.isUpdate) {
+      this.updateSkill(this.skillForm.value, this.currentSkill!.id);
       return;
     }
   }
 
-  createSkill(form:any){
-    this.skillService.createSkill(form).subscribe(
-      data =>{
-        if(data.data){
-          this.skills.push(data.data)
+  createSkill(form: any) {
+    const formData = new FormData();
+    formData.append('image', this.skillForm.get('image')?.value);
+    for (const key in form) {
+      formData.append(key, form[key]);
+    }
+
+    this.skillService.createSkill(formData).subscribe(
+      data => {
+        if (data.data) {
+          this.skills.push(data.data);
           this.skillForm.reset();
-          this.toasterService.success("skill has been created");
+          this.toasterService.success("Skill has been created");
         }
-      },error => {
-        this.toasterService.error(error.error)
+      }, error => {
+        this.toasterService.error(error.error);
       }
-    )
+    );
   }
 
   modifySkill(id:number){
@@ -93,27 +103,26 @@ export class SkillsPageComponent implements OnInit{
     )
   }
 
-  updateSkill(form:any,id:number){
-    this.skillService.modifySkill(form,id).subscribe(
-      data => {
-        if (data.data){
-          this.skills = this.skills.map(
-            skill => {
-              if (skill.id == id && data.data){
-                return data.data;
+  updateSkill(form: any, id: number) {
+    const formData = new FormData();
+    formData.append('image', this.skillForm.get('image')?.value);
+    for (const key in form) {
+      formData.append(key, form[key]);
+    }
 
-              }else{
-                return skill;
-              }
-            }
-          )
+    this.skillService.modifySkill(formData, id).subscribe(
+      data => {
+        if (data.data) {
+          this.skills = this.skills.map(
+            skill => skill.id === id ? data.data! : skill
+          );
           this.skillForm.reset();
-          this.toasterService.success("skill ha been updated");
+          this.toasterService.success("Skill has been updated");
         }
-      },error => {
-        this.toasterService.error(error.error)
+      }, error => {
+        this.toasterService.error(error.error);
       }
-    )
+    );
   }
 
   loadPublishedCourses(){
@@ -154,4 +163,15 @@ export class SkillsPageComponent implements OnInit{
       }
     )
   }
+
+
+  checkFileType(file: File | null): void {
+    if (file && !file.type.startsWith('image/')) {
+      this.skillForm.get('image')?.setErrors({ invalidFileType: true });
+      this.toasterService.error('Please upload a valid image file.');
+    } else {
+      this.skillForm.get('image')?.setErrors(null);
+    }
+  }
+
 }

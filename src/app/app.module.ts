@@ -12,6 +12,7 @@ import {ToastrModule} from "ngx-toastr";
 import {HTTP_INTERCEPTORS, HttpClientModule} from "@angular/common/http";
 import {BrowserAnimationsModule, NoopAnimationsModule} from "@angular/platform-browser/animations";
 import {AuthInterceptor} from "./core/interceptors/token.interceptor";
+import {MarkdownModule} from "ngx-markdown";
 
 @NgModule({
   declarations: [
@@ -31,7 +32,9 @@ import {AuthInterceptor} from "./core/interceptors/token.interceptor";
           preventDuplicates: true,
         }),
         BrowserAnimationsModule,
-        NoopAnimationsModule
+        NoopAnimationsModule,
+        MarkdownModule.forRoot()
+
 
     ],
   providers: [

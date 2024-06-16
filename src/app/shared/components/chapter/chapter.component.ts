@@ -13,10 +13,6 @@ export class ChapterComponent {
   @Input() courseId?: number;
   @Output() deleteChapterEvent = new EventEmitter<number>();
   @Output() deleteLessonEvent = new EventEmitter<number>();
-  toggleChapter(chapter: ChapterCourseResponses) {
-    chapter.isOpen = !chapter.isOpen;
-  }
-
 
   deleteChapter(chapterId: number) {
     this.deleteChapterEvent.emit(chapterId);

@@ -10,6 +10,7 @@ export class TrueFalseQuizContainerComponent {
 
   quizForm: FormGroup;
   @Output() removeQuiz = new EventEmitter<void>();
+  @Output() submitQuiz = new EventEmitter<FormGroup>();
 
 
   constructor(private fb: FormBuilder) {
@@ -24,7 +25,7 @@ export class TrueFalseQuizContainerComponent {
 
   addQuestion() {
     const questionForm = this.fb.group({
-      questionText: ['', Validators.required],
+      prompt: ['', Validators.required],
       correctAnswer: [null, Validators.required]
     });
     this.questions.push(questionForm);
@@ -35,7 +36,7 @@ export class TrueFalseQuizContainerComponent {
   }
 
   onSubmit() {
-    console.log(this.quizForm.value);
+    this.submitQuiz.emit(this.quizForm)
   }
 
   removeForm() {

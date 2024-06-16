@@ -47,4 +47,5 @@ export class ExplanatoryQuizFormComponent {
     }
 
 
+    protected readonly event = event;
 }

@@ -1,7 +1,7 @@
 import {Component, OnInit} from '@angular/core';
 import {environment} from "../../../../../environment";
 import {FormBuilder, FormGroup, Validators} from "@angular/forms";
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {ToastrService} from "ngx-toastr";
 import {LessonService} from "../../services/lesson.service";
 import {QuizzesResponse} from "../../models/quizzes/QuizzesResponse";
@@ -31,6 +31,7 @@ export class Step3PageComponent implements OnInit {
   quizContainers: number[] = [];
   explanatoryQuiz: number[] = [];
   multipleChoiceQuiz: number[] = [];
+  selectedFile: File | null = null;
 
   addQuizContainer() {
     this.quizContainers.push(this.quizContainers.length);
@@ -54,17 +55,33 @@ export class Step3PageComponent implements OnInit {
   }
 
 
-  constructor(private fb: FormBuilder, private route: ActivatedRoute, private toaster: ToastrService, private lessonService: LessonService, private quizService: QuizService) {
+  constructor(private fb: FormBuilder, private route: ActivatedRoute, private toaster: ToastrService, private lessonService: LessonService, private quizService: QuizService,private router:Router) {
     this.lessonForm = this.fb.group({
       title: ["", Validators.required],
       description: ["", Validators.required],
       chapterId: ["", Validators.required],
-      material: ["https://www.youtube.com/watch?v=x7X9w_GIm1s&ab_channel=Fireship"],
+      material: ["",Validators.required],
       usesAI: [""]
     })
 
+    this.lessonForm.get('material')?.valueChanges.subscribe((file: File) => {
+      this.selectedFile = file;
+      this.checkFileType(file);
+    });
 
   }
+
+  checkFileType(file: File | null): void {
+    if (file && !file.type.startsWith('video/')) {
+      this.lessonForm.get('material')?.setErrors({ invalidFileType: true });
+      this.toaster.error('Please upload a valid video file.');
+    } else {
+      this.lessonForm.get('material')?.setErrors(null);
+    }
+  }
+
+
+
 
   ngOnInit() {
     this.route.params.subscribe(
@@ -81,13 +98,9 @@ export class Step3PageComponent implements OnInit {
           this.isUpdate = true;
           this.updateForm = true;
           this.getCourseDetails(this.lessonId)
-
-
         }
-
       }
     )
-
   }
 
   onRegenerateSubmit(form: FormGroup) {
@@ -114,13 +127,26 @@ export class Step3PageComponent implements OnInit {
 
   onSubmit() {
     if (this.lessonForm.invalid) {
-      this.toaster.error("form is not valid")
+      this.toaster.error("Form is not valid");
       this.lessonForm.markAllAsTouched();
       return;
     }
-    if (this.lessonForm.valid) {
-      this.createLesson(this.lessonForm.value);
+
+    const formData = new FormData();
+    formData.append('title', this.lessonForm.get('title')?.value);
+    formData.append('description', this.lessonForm.get('description')?.value);
+    formData.append('chapterId', this.lessonForm.get('chapterId')?.value);
+    if (this.selectedFile) {
+      formData.append('material', this.selectedFile);
     }
+    formData.append('usesAI', this.lessonForm.get('usesAI')?.value);
+
+    // Logging formData contents for debugging
+    formData.forEach((value, key) => {
+      console.log(key, value);
+    });
+
+    this.createLesson(formData);
   }
 
   createLesson(form: any) {
@@ -132,6 +158,7 @@ export class Step3PageComponent implements OnInit {
         this.summary = data.data.summary;
         this.lessonId = data.data.id;
         this.toaster.success("lesson has been added");
+        this.router.navigate(['/step3/'+this.chapterId+'/'+data.data.id])
       },
       error => {
         this.toaster.error(error.error.message)
@@ -331,11 +358,13 @@ export class Step3PageComponent implements OnInit {
     this.multipleChoiceQuiz.splice(index, 1);
   }
 
-  createManualMultipleChoiceQuiz(form: any) {
-    this.quizService.createManualMultipleChoice(this.lessonId!,form).subscribe(
+  createManualMultipleChoiceQuiz(form: FormGroup) {
+    this.quizService.createManualMultipleChoice(this.lessonId!,form.value).subscribe(
       data => {
         if (data?.data && this.quizzes?.multipleChoiceQuizzes) {
           this.quizzes.multipleChoiceQuizzes.push(data.data);
+          form.reset();
+          this.multipleChoiceQuiz= [];
         }
         this.toaster.success("Quiz has been created")
 
@@ -344,6 +373,38 @@ export class Step3PageComponent implements OnInit {
       }
     )
   }
+
+  createExplanatoryManualQuiz(form: FormGroup) {
+    this.quizService.createManualExplanatory( this.lessonId!,form.value).subscribe(
+      data => {
+        if (data?.data && this.quizzes?.explanatoryQuizzes) {
+          this.quizzes.explanatoryQuizzes.push(data.data);
+          form.reset();
+          this.multipleChoiceQuiz = [];
+
+        }
+        this.toaster.success("Quiz has been created")
+      }, error => {
+        this.toaster.error(error.error.message)
+      }
+    )
+  }
+
+  createTrueFalseManualQuiz(form: FormGroup) {
+    this.quizService.createManualTrueFalse(this.lessonId!,form.value).subscribe(
+      data => {
+        if (data?.data && this.quizzes?.trueFalseQuizzes) {
+          this.quizzes.trueFalseQuizzes.push(data.data);
+          form.reset();
+          this.quizContainers = [];
+        }
+        this.toaster.success("Quiz has been created")
+      }, error => {
+        this.toaster.error(error.error.message)
+      }
+    )
+  }
+
 
 
 }

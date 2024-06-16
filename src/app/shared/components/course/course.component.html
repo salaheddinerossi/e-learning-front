@@ -1,11 +1,24 @@
 <div class="w-full px-4 md:w-1/2 lg:w-1/3">
   <div class="w-full mb-10">
-    <div class="mb-6 overflow-hidden rounded">
+    <div class="mb-6 overflow-hidden rounded h-[300px] bg-cover bg-center" >
+
+
+
       <img
+
+        *ngIf="course.image!= null && course.image!=''"
         src="{{course.image}}"
         alt="image"
         class="w-full"
       />
+      <img
+
+        *ngIf="course.image== null || course.image==''"
+        src="assets/images/courser%20place%20holder%20image.png"
+        alt="image"
+        class="w-full"
+      />
+
     </div>
     <div>
       <h3>

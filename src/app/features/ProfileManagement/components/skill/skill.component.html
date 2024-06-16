@@ -1,6 +1,7 @@
 <div class="mx-5">
     <div class="bg-primary rounded-2xl h-[260px] w-[260px] flex justify-center items-center">
-        <img class="h-[200px] w-[200px]" src="{{skill.image}}">
+      <img *ngIf="skill.image!=null && skill.image!=''" class="h-[200px] w-[200px]" src="{{skill.image}}">
+      <img *ngIf="skill.image==null || skill.image==''" class="h-[200px] w-[200px]" src="/assets/images/skill%20placeholder.png">
     </div>
     <h1 class="text-dark font-normal w-[200px]  ">{{skill.name}} , {{skill.skillLevel}}</h1>
 </div>

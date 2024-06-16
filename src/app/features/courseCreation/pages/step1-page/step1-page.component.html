@@ -70,6 +70,9 @@
         >
         </app-select-input>
       </div>
+    </div>
+    <app-file-input formControlName="image"></app-file-input>
+
       <div class="my-6 flex justify-center" *ngIf="isUpdate">
         <app-large-button [buttonText]="'Update Course'"></app-large-button>
       </div>
@@ -78,12 +81,6 @@
 
         <app-large-button [buttonText]="'Create Course'"></app-large-button>
       </div>
-
-
-
-    </div>
-
-
   </form>
   <div *ngIf="isUpdate" class="mb-5 flex justify-end" >
     <app-small-button [routerLink]="'/step2/'+courseId" [buttonText]="'modify chapters'" ></app-small-button>

@@ -51,4 +51,5 @@ export class MultiChoiceQuizFormComponent {
     return (question.get('options') as FormArray).controls;
   }
 
+  protected readonly event = event;
 }

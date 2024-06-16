@@ -10,7 +10,7 @@ export class MultiChoiceQuizContainerComponent {
 
   quizForm: FormGroup;
   @Output() removeQuiz = new EventEmitter<void>();
-  @Output() submitQuiz = new EventEmitter<void>();
+  @Output() submitQuiz = new EventEmitter<FormGroup>();
   constructor(private fb: FormBuilder) {
     this.quizForm = this.fb.group({
       questions: this.fb.array([])
@@ -38,7 +38,7 @@ export class MultiChoiceQuizContainerComponent {
   }
 
   onSubmit() {
-    this.submitQuiz.emit(this.quizForm.value)
+    this.submitQuiz.emit(this.quizForm)
   }
 
   removeForm() {

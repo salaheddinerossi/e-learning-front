@@ -9,21 +9,21 @@
         <div *ngFor="let option of getOptions(question); let j = index" class="option-container">
           <div class=" flex my-4 ">
             <app-text-input [formControlName]="j" placeholder="Enter option text" />
-            <button class="ml-3 bg-red-500 py-2 px-4 text-white rounded" type="button" (click)="removeOption(i, j)">Delete Option</button>
+            <button class="ml-3 bg-red-500 py-2 px-4 text-white rounded" type="button" (click)="removeOption(i, j);$event.preventDefault()">Delete Option</button>
           </div>
         </div>
-        <app-small-button type="button" (click)="addOption(i)" [buttonText]="'Add Option'"></app-small-button>
+        <app-small-button  (click)="addOption(i);$event.preventDefault()" [buttonText]="'Add Option'"></app-small-button>
       </div>
 
       <div class="my-4">
         <select formControlName="correctAnswer" class="px-4 py-2 border mr-3">
           <option *ngFor="let option of getOptions(question); let j = index" [value]="option.value">{{ option.value }}</option>
         </select>
-        <button type="button" class="bg-red-500 py-2 px-4 text-white rounded" (click)="onRemoveQuestion(i)">Remove Question</button>
+        <button type="button" class="bg-red-500 py-2 px-4 text-white rounded" (click)="onRemoveQuestion(i);$event.preventDefault();">Remove Question</button>
       </div>
     </div>
   </div>
-  <button type="button" (click)="onAddQuestion()" class="bg-dark py-2 px-4 text-white rounded">Add Question</button>
+  <button type="button" (click)="onAddQuestion();$event.preventDefault();" class="bg-dark py-2 px-4 text-white rounded">Add Question</button>
   <button  type="submit" *ngIf="questions.length!=0" class="bg-primary py-2 px-4 text-white rounded ml-3">Submit</button>
-  <button  type="button" (click)="onRemoveQuiz()" class="bg-red-500 py-2 px-4 text-white rounded ml-3">Remove Quiz</button>
+  <button  type="button" (click)="onRemoveQuiz();$event.preventDefault();" class="bg-red-500 py-2 px-4 text-white rounded ml-3">Remove Quiz</button>
 </form>

@@ -27,6 +27,10 @@ const routes: Routes = [
   {
     path:'',
     loadChildren : () => import('./features/ProfileManagement/profile-management.module').then(m => m.ProfileManagementModule)
+  },
+  {
+    path:'',
+    loadChildren : () => import('./features/course-enrollment/course-enrollment.module').then(m => m.CourseEnrollmentModule)
   }
 
 

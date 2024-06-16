@@ -14,40 +14,37 @@ import { ControlValueAccessor, NG_VALUE_ACCESSOR, FormControl } from '@angular/f
   ]
 })
 export class FileInputComponent implements ControlValueAccessor {
-  fileControl: FormControl = new FormControl();  // FormControl for the file input
+  fileControl: FormControl = new FormControl();
+  selectedFile: File | null = null;
 
-  onChange: Function = (file: File | null) => {};
-  onTouched: Function = () => {};
+  onChange: (file: File | null) => void = () => {};
+  onTouched: () => void = () => {};
 
-  // ControlValueAccessor interface methods
   writeValue(file: File | null): void {
-    if (file) {
-      this.fileControl.setValue(file, { emitEvent: false });
+    this.selectedFile = file;
+    if (!file) {
+      this.fileControl.reset();
     }
   }
 
   registerOnChange(fn: any): void {
+    this.onChange = fn;
     this.fileControl.valueChanges.subscribe(fn);
   }
 
-  registerOnTouched(fn: Function): void {
+  registerOnTouched(fn: any): void {
     this.onTouched = fn;
   }
 
   setDisabledState?(isDisabled: boolean): void {
-    if (isDisabled) {
-      this.fileControl.disable();
-    } else {
-      this.fileControl.enable();
-    }
+    isDisabled ? this.fileControl.disable() : this.fileControl.enable();
   }
 
-  // Method to handle file selection
   onFileSelected(event: Event): void {
     const element = event.target as HTMLInputElement;
-    const file = element.files ? element.files[0] : null;
-    if (file) {
-      this.fileControl.setValue(file);
-    }
+    const file = element.files?.[0] ?? null;
+    this.selectedFile = file;
+    this.fileControl.setValue(file);
+    this.onChange(file);
   }
 }

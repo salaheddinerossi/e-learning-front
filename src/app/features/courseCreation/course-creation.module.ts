@@ -23,25 +23,30 @@ import {TrueFalseQuizFormComponent} from "./components/quizzes/true-false-quiz-f
 import {ExplanatoryQuizFormComponent} from "./components/quizzes/explanatory-quiz-form/explanatory-quiz-form.component";
 
 @NgModule({
-  declarations: [
-    Step1PageComponent,
-    StartPageComponent,
-    Step2PageComponent,
-    Step3PageComponent,
-    AdvicesComponent,
-    LeftTitleComponent,
-    SummaryComponent,
-    ExplanatoryQuizComponent,
-    TrueFalseQuizComponent,
-    MultipleChoiceQuizComponent,
-    PublishPageComponent,
-    MultiChoiceQuizContainerComponent,
-    ExplanatoryQuizContainerComponent,
-    TrueFalseQuizContainerComponent,
-    MultiChoiceQuizFormComponent,
-    ExplanatoryQuizFormComponent,
-    TrueFalseQuizFormComponent
-  ],
+    declarations: [
+        Step1PageComponent,
+        StartPageComponent,
+        Step2PageComponent,
+        Step3PageComponent,
+        AdvicesComponent,
+        LeftTitleComponent,
+        SummaryComponent,
+        ExplanatoryQuizComponent,
+        TrueFalseQuizComponent,
+        MultipleChoiceQuizComponent,
+        PublishPageComponent,
+        MultiChoiceQuizContainerComponent,
+        ExplanatoryQuizContainerComponent,
+        TrueFalseQuizContainerComponent,
+        MultiChoiceQuizFormComponent,
+        ExplanatoryQuizFormComponent,
+        TrueFalseQuizFormComponent
+    ],
+    exports: [
+        TrueFalseQuizFormComponent,
+        ExplanatoryQuizContainerComponent,
+        ExplanatoryQuizFormComponent
+    ],
     imports: [
         CommonModule,
         CourseCreationRoutingModule,
