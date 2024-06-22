@@ -21,6 +21,7 @@ import { TrueFalseQuizContainerComponent } from './components/quizContainers/tru
 import {MultiChoiceQuizFormComponent} from "./components/quizzes/multi-choice-quiz-form/multi-choice-quiz-form.component";
 import {TrueFalseQuizFormComponent} from "./components/quizzes/true-false-quiz-form/true-false-quiz-form.component";
 import {ExplanatoryQuizFormComponent} from "./components/quizzes/explanatory-quiz-form/explanatory-quiz-form.component";
+import {NgxSpinnerComponent} from "ngx-spinner";
 
 @NgModule({
     declarations: [
@@ -53,6 +54,7 @@ import {ExplanatoryQuizFormComponent} from "./components/quizzes/explanatory-qui
         SharedModule,
         FormsModule,
         ReactiveFormsModule,
+        NgxSpinnerComponent,
     ]
 })
 export class CourseCreationModule { }

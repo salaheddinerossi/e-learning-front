@@ -33,6 +33,7 @@
     <div formArrayName="categoriesForm" *ngIf="!isUpdate">
       <div class="my-2" *ngFor="let category of categoriesForm.controls; let i = index" [formGroupName]="i">
         <app-select-input
+          *ngIf="categoryOptions[i] && categoryOptions[i].length > 0"
           [placeholder]="'select a category'"
           [options]="categoryOptions[i]"
           formControlName="categoryId"
@@ -40,7 +41,6 @@
         >
         </app-select-input>
       </div>
-
     </div>
 
     <app-file-input formControlName="icon"></app-file-input>

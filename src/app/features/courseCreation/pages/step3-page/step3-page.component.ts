@@ -10,6 +10,7 @@ import {MultiChoiceQuiz} from "../../models/quizzes/MultiChoiceQuiz";
 import {TrueFalseQuiz} from "../../models/quizzes/TrueFalseQuiz";
 import {ExplanatoryQuiz} from "../../models/quizzes/ExplanatoryQuiz";
 import {ErrorData} from "../../../../shared/models/ErrorData";
+import {NgxSpinnerService} from "ngx-spinner";
 
 @Component({
   selector: 'app-step3-page',
@@ -55,7 +56,7 @@ export class Step3PageComponent implements OnInit {
   }
 
 
-  constructor(private fb: FormBuilder, private route: ActivatedRoute, private toaster: ToastrService, private lessonService: LessonService, private quizService: QuizService,private router:Router) {
+  constructor(private fb: FormBuilder, private route: ActivatedRoute, private toaster: ToastrService, private lessonService: LessonService, private quizService: QuizService,private router:Router,    private spinner: NgxSpinnerService) {
     this.lessonForm = this.fb.group({
       title: ["", Validators.required],
       description: ["", Validators.required],
@@ -112,6 +113,7 @@ export class Step3PageComponent implements OnInit {
   }
 
   onSubmitAi() {
+    this.spinner.show('aiSpinner');
     this.lessonForm.patchValue({
       usesAI: true
     });
@@ -159,17 +161,23 @@ export class Step3PageComponent implements OnInit {
         this.lessonId = data.data.id;
         this.toaster.success("lesson has been added");
         this.router.navigate(['/step3/'+this.chapterId+'/'+data.data.id])
+        this.spinner.hide('aiSpinner');
+
       },
       error => {
-        this.toaster.error(error.error.message)
+        this.toaster.error(error.error.message);
+        this.spinner.hide('aiSpinner');
       }
     )
   }
 
   regenerateSummary(form: any) {
+    this.spinner.show('UpdateSummarySpinner');
+
     this.lessonService.regenerateSummary(form, this.lessonId!).subscribe(
       data => {
         this.summary = data.data.summary;
+        this.spinner.hide('UpdateSummarySpinner');
         this.toaster.success("summary has been regenerated");
       }, error => {
         this.toaster.error(error.error.message)
@@ -220,9 +228,14 @@ export class Step3PageComponent implements OnInit {
 
   updateMultipleChoiceQuiz(form: FormGroup) {
 
+
+
     let formCopy = {...form.value};
 
     delete formCopy.quizId
+
+    this.spinner.show('updateQuizSpinner');
+
 
     this.quizService.updateMultipleChoiceQuiz(formCopy, form.value.quizId).subscribe(
       data => {
@@ -230,7 +243,9 @@ export class Step3PageComponent implements OnInit {
           this.quizzes.multipleChoiceQuizzes = this.quizzes.multipleChoiceQuizzes.map(quiz => {
             return quiz?.id === data.data?.id ? data.data : quiz;
           }).filter(Boolean) as MultiChoiceQuiz[];
+
         }
+        this.spinner.hide('updateQuizSpinner');
 
         this.toaster.success("Quiz has been updated")
       }, error => {
@@ -244,7 +259,7 @@ export class Step3PageComponent implements OnInit {
     let formCopy = {...form.value};
 
     delete formCopy.quizId
-
+    this.spinner.show('updateQuizSpinner');
     this.quizService.updateTrueFalseQuiz(formCopy, form.value.quizId).subscribe(
       data => {
         if (data?.data && this.quizzes?.trueFalseQuizzes) {
@@ -252,7 +267,9 @@ export class Step3PageComponent implements OnInit {
             return quiz?.id === data.data?.id ? data.data : quiz;
           }).filter(Boolean) as TrueFalseQuiz[];
         }
+        this.spinner.hide('updateQuizSpinner');
         this.toaster.success("Quiz has been updated")
+
       }, error => {
         this.toaster.error(error.error.message)
       }
@@ -265,6 +282,8 @@ export class Step3PageComponent implements OnInit {
 
     delete formCopy.quizId
 
+    this.spinner.show('updateQuizSpinner');
+
     this.quizService.updateExplanatoryQuiz(formCopy, form.value.quizId).subscribe(
       data => {
         if (data?.data && this.quizzes?.explanatoryQuizzes) {
@@ -272,6 +291,7 @@ export class Step3PageComponent implements OnInit {
             return quiz?.id === data.data?.id ? data.data : quiz;
           }).filter(Boolean) as ExplanatoryQuiz[];
         }
+        this.spinner.hide('updateQuizSpinner');
         this.toaster.success("Quiz has been updated")
       }, error => {
         this.toaster.error(error.error.message)
@@ -280,11 +300,14 @@ export class Step3PageComponent implements OnInit {
   }
 
   createMultipleChoiceQuiz() {
+    this.spinner.show('quizSpinner');
     this.quizService.createMultipleChoiceQuiz(this.lessonId!).subscribe(
+
       data => {
         if (data?.data && this.quizzes?.multipleChoiceQuizzes) {
           this.quizzes.multipleChoiceQuizzes.push(data.data);
         }
+        this.spinner.hide('quizSpinner');
         this.toaster.success("Quiz has been created")
 
       }, error => {
@@ -294,11 +317,14 @@ export class Step3PageComponent implements OnInit {
   }
 
   createTrueFalseQuiz() {
+    this.spinner.show('quizSpinner');
+
     this.quizService.createTrueFalseQuiz(this.lessonId!).subscribe(
       data => {
         if (data?.data && this.quizzes?.trueFalseQuizzes) {
           this.quizzes.trueFalseQuizzes.push(data.data);
         }
+        this.spinner.hide('quizSpinner');
         this.toaster.success("Quiz has been created")
       }, error => {
         this.toaster.error(error.error.message)
@@ -307,11 +333,13 @@ export class Step3PageComponent implements OnInit {
   }
 
   createExplanatoryQuiz() {
+    this.spinner.show('quizSpinner');
     this.quizService.createExplanatoryQuiz(this.lessonId!).subscribe(
       data => {
         if (data?.data && this.quizzes?.explanatoryQuizzes) {
           this.quizzes.explanatoryQuizzes.push(data.data);
         }
+        this.spinner.hide('quizSpinner');
         this.toaster.success("Quiz has been created")
       }, error => {
         this.toaster.error(error.error.message)

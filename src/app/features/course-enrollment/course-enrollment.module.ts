@@ -15,6 +15,7 @@ import { TrueFalseQuizFormAnswerComponent } from './components/true-false-quiz-f
 import { MultipleChoiceQuizFormAnswerComponent } from './components/multiple-choice-quiz-form-answer/multiple-choice-quiz-form-answer.component';
 import { ModalComponent } from './components/modal/modal.component';
 import { ReviewFormComponent } from './components/review-form/review-form.component';
+import {NgxSpinnerComponent} from "ngx-spinner";
 
 
 @NgModule({
@@ -37,7 +38,8 @@ import { ReviewFormComponent } from './components/review-form/review-form.compon
         FormsModule,
         MarkdownModule.forChild(),
         ReactiveFormsModule,
-        CourseCreationModule
+        CourseCreationModule,
+        NgxSpinnerComponent
     ]
 })
 export class CourseEnrollmentModule { }

@@ -57,17 +57,15 @@
         </div>
         <div *ngIf="openTabIndex === 3" class="p-6 text-base leading-relaxed text-body-color ">
             <div class="-mx-4 flex flex-wrap">
-                <app-course *ngFor="let course of draftedCourses" [course]="course"></app-course>
+                <app-course [isDraft]="true" *ngFor="let course of draftedCourses" [course]="course"></app-course>
             </div>
         </div>
         <div *ngIf="openTabIndex === 4" class="p-6 text-base leading-relaxed text-body-color ">
             <app-info (submitInfoForm)="submitInfoForm($event)" [info]="personalInfo"></app-info>
         </div>
-
         <div *ngIf="openTabIndex === 4" class="p-6 text-base leading-relaxed text-body-color ">
             <app-password-update (submitPasswordForm)="updatePassword($event)" ></app-password-update>
         </div>
-
     </div>
 
 

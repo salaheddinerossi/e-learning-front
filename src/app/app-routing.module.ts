@@ -4,10 +4,6 @@ import { RouterModule, Routes } from '@angular/router';
 const routes: Routes = [
 
   {
-    path: 'example',
-    loadChildren: () => import('./features/example/example.module').then(m => m.ExampleModule)
-  },
-  {
     path: '',
     loadChildren: () => import('./features/public/public.module').then(m => m.PublicModule)
   },

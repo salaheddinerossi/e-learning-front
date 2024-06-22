@@ -32,10 +32,17 @@
         {{course.about | truncate:100}}
       </p>
 
-      <a
+      <a *ngIf="!isDraft"
         [routerLink]="'/course/'+course.id"
       >
+
         <app-small-button [buttonText]="'view course'"></app-small-button>
+      </a>
+
+      <a *ngIf="isDraft"
+        [routerLink]="'/step2/'+course.id"
+      >
+        <app-small-button [buttonText]="'Modify Course'"></app-small-button>
       </a>
     </div>
   </div>

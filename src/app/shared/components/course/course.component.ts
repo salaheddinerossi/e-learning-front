@@ -8,4 +8,5 @@ import {Course} from "../../models/Course";
 })
 export class CourseComponent {
   @Input() course!:Course;
+  @Input() isDraft:Boolean = false;
 }

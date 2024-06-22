@@ -21,6 +21,10 @@ import {environment} from "../../../../../environment";
 import {ErrorData} from "../../../../shared/models/ErrorData";
 import {FormGroup} from "@angular/forms";
 import {ReviewService} from "../../services/review.service";
+import {NgxSpinnerService} from "ngx-spinner";
+import {MarkdownService} from "ngx-markdown";
+import {DomSanitizer, SafeHtml} from "@angular/platform-browser";
+import MarkdownIt from "markdown-it";
 
 @Component({
   selector: 'app-course-page',
@@ -60,6 +64,8 @@ export class CoursePageComponent implements OnInit{
     errorTitle: environment.notFound.enrollmentNotFound,
     errorDescription: environment.notFound.enrollmentNotFoundDescription
   }
+  private md: MarkdownIt;
+  isChatLoading: boolean = false;
   isError=false;
 
 
@@ -77,10 +83,22 @@ export class CoursePageComponent implements OnInit{
     private noteService:NotesService,
     private quizService:QuizService,
     private toasterService:ToastrService,
-    private reviewService:ReviewService
+    private reviewService:ReviewService,
+    private spinner: NgxSpinnerService,
+    private sanitizer: DomSanitizer
+
+
   ) {
+    this.md = new MarkdownIt();
+
 
   }
+
+  parseMarkdown(content: string): SafeHtml {
+    const htmlContent = this.md.render(content);
+    return this.sanitizer.bypassSecurityTrustHtml(htmlContent);
+  }
+
 
 
   ngOnInit() {
@@ -151,25 +169,41 @@ export class CoursePageComponent implements OnInit{
   }
 
   askChat(question: string, textarea: HTMLTextAreaElement) {
-
     if (question.trim()) {
-      this.studentLesson.chatHistoryResponseList?.push({id: 0, content: question, fromAssistant: false});
-      this.scrollToBottom()
+      this.studentLesson.chatHistoryResponseList?.push({
+        id: 0,
+        content: question,
+        fromAssistant: false,
+        parsedContent: question
+      });
+      this.scrollToBottom();
       textarea.value = '';
+
+      this.isChatLoading = true;
+
       this.chatService.askChat(question, this.studentLesson.id).subscribe(
-        data => {
-          if (data.data) {
-            this.studentLesson.chatHistoryResponseList?.push({id: 0, content: data.data, fromAssistant: true});
-            this.scrollToBottom()
+          data => {
+            if (data.data) {
+              const parsedContent = this.parseMarkdown(data.data);
+              this.studentLesson.chatHistoryResponseList?.push({
+                id: 0,
+                content: data.data,
+                fromAssistant: true,
+                parsedContent: parsedContent
+              });
+              this.scrollToBottom();
+            }
+            this.isChatLoading = false;
+          },
+          error => {
+            console.error("Error during chat service call:", error);
+            this.isChatLoading = false;
           }
-        },
-        error => {
-          console.error("Error during chat service call:", error);
-        }
       );
     }
   }
-  private scrollToBottom(): void {
+
+    private scrollToBottom(): void {
     try {
       this.chatContainer.nativeElement.scrollTop = this.chatContainer.nativeElement.scrollHeight;
     } catch (err) {
@@ -209,6 +243,8 @@ export class CoursePageComponent implements OnInit{
   }
   correctExplanatoryQuiz(questionsWithForm:QuestionsWithForm,quizId:number){
 
+    this.spinner.show("correctSpinner")
+
     let answerDtos: AnswerDto[] = questionsWithForm.questions.map(question => {
       return {
         id: question.id,
@@ -227,6 +263,7 @@ export class CoursePageComponent implements OnInit{
     this.quizService.correctQuiz(quizCorrectionDto).subscribe(
       data => {
         if(data.data){
+          this.spinner.hide("correctSpinner")
           let quizCorrectionResponse: QuizCorrectionResponse = data.data;
           let quizToUpdate = this.studentLesson.studentQuizResponses.find(quiz => quiz.id === quizCorrectionResponse.id);
           if (quizToUpdate) {
@@ -259,6 +296,7 @@ export class CoursePageComponent implements OnInit{
 
   correctTrueFalseQuiz(questionsWithForm:QuestionsWithForm,quizId:number) {
 
+    this.spinner.show("correctSpinner")
 
     let answerDtos: AnswerDto[] = questionsWithForm.questions.map(question => {
       let booleanAnswer:boolean;
@@ -280,6 +318,8 @@ export class CoursePageComponent implements OnInit{
     this.quizService.correctQuiz(quizCorrectionDto).subscribe(
         data => {
           if(data.data){
+            this.spinner.hide("correctSpinner")
+
             let quizCorrectionResponse: QuizCorrectionResponse = data.data;
             let quizToUpdate = this.studentLesson.studentQuizResponses.find(quiz => quiz.id === quizCorrectionResponse.id);
             if (quizToUpdate) {
@@ -360,5 +400,7 @@ export class CoursePageComponent implements OnInit{
   showReviewModal(){
     this.ReviewIsShowed=true;
   }
+
+
 
 }

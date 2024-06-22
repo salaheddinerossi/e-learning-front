@@ -3,6 +3,11 @@
   <app-not-found [error]="error"></app-not-found>
 </div>
 
+<ngx-spinner name="correctSpinner" type="ball-scale-multiple">
+  <p class="text-white text-lg">Correcting the quiz ...</p>
+</ngx-spinner>
+
+
 <div *ngIf="!isError" class="navBg">
   <div class="flex flex-col h-screen">
     <div class="py-6 my-auto px-5 navBg">
@@ -67,29 +72,54 @@
         <div class="chapterHeader py-4">
           <h1 class="text-white pl-5">Chat Assistant</h1>
         </div>
-        <div class="navBg flex-grow flex flex-col text-white p-3 ">
+        <div class="navBg flex-grow flex flex-col text-white p-3">
           <div #chatContainer class="overflow-y-auto h-screen" style="max-height: calc(100vh - 15rem);">
-            <div *ngFor="let chatRecord of studentLesson.chatHistoryResponseList"  >
+            <div *ngFor="let chatRecord of studentLesson.chatHistoryResponseList">
               <div *ngIf="chatRecord.fromAssistant" class="text-left">
-                <h1 class="userBackground my-2 text-xs p-2 rounded font-light"> {{chatRecord.content}}</h1>
+                <div class="userBackground my-2 text-xs p-2 rounded font-light markdown-content" [innerHTML]="parseMarkdown(chatRecord.content)"></div>
               </div>
               <div *ngIf="!chatRecord.fromAssistant" class="text-right">
-                <h1 class="my-2 text-xs assistantBackground p-2 rounded font-light">{{chatRecord.content}}</h1>
+                <div class="my-2 text-xs assistantBackground p-2 rounded font-light">{{chatRecord.content}}</div>
+              </div>
+            </div>
+
+            <!-- Chat loading indicator -->
+            <div *ngIf="isChatLoading" class="text-left">
+              <div class="userBackground my-2 text-xs p-2 rounded font-light flex items-center">
+                <div class="typing-indicator">
+                  <span></span>
+                  <span></span>
+                  <span></span>
+                </div>
               </div>
             </div>
           </div>
-          <div class="mt-auto mx-2 mb-4">
 
-            <form (ngSubmit)="askChat(input.value,input)">
+          <!-- Chat input form -->
+          <div class="mt-auto mx-2 mb-4">
+            <form *ngIf="passTheQuiz" (ngSubmit)="askChat(input.value, input)">
               <div class="flex">
-            <textarea
-                    class="text-white textareaBg w-full outline-none px-3 py-2 border-0 text-sm"
-                    placeholder="Type your message here..."
-                    #input>
-            </textarea>
-                <button type="submit" class="h-full chapterHeader py-4 px-2">send </button>
+                  <textarea disabled
+                          class="text-white textareaBg w-full outline-none px-3 py-2 border-0 text-sm"
+                          placeholder="chat is disabled during quiz"
+                          #input
+                  ></textarea>
+
+                <button type="submit" class="h-full chapterHeader py-4 px-2">Send</button>
               </div>
             </form>
+            <form *ngIf="!passTheQuiz" (ngSubmit)="askChat(input.value, input)">
+              <div class="flex">
+                  <textarea
+                          class="text-white textareaBg w-full outline-none px-3 py-2 border-0 text-sm"
+                          placeholder="Type your message here..."
+                          #input
+                  ></textarea>
+
+                <button type="submit" class="h-full chapterHeader py-4 px-2">Send</button>
+              </div>
+            </form>
+
           </div>
         </div>
       </div>

@@ -35,7 +35,7 @@ export class CategoriesPageComponent implements OnInit {
       containsCategories: ['', Validators.required],
       icon: ['', Validators.required],
       categoriesForm: this.fb.array([]),
-      parent_id: ['', Validators.required],
+      parent_id: [''],
     });
 
     this.categoryForm.get('icon')?.valueChanges.subscribe((file: File) => {
@@ -49,7 +49,7 @@ export class CategoriesPageComponent implements OnInit {
 
   addCategory() {
     this.categoriesForm.push(this.fb.group({
-      categoryId: ['', Validators.required]
+      categoryId: ['']
     }));
   }
 
@@ -68,7 +68,7 @@ export class CategoriesPageComponent implements OnInit {
 
 
     return this.allCategories
-      .filter(category => category.parentCategoryId == parentCategoryId)
+      .filter(category => category.parentCategoryId == parentCategoryId && category.containsCategories)
       .map(category => ({
         label: category.title,
         value: category.id
@@ -77,7 +77,6 @@ export class CategoriesPageComponent implements OnInit {
 
 
   onCategoryChange(event: any, index: number) {
-
     this.selectedCategories[index] = event.target.value;
     this.categoryOptions[index + 1] = this.getCategoryOptions(index + 1);
 
@@ -90,11 +89,10 @@ export class CategoriesPageComponent implements OnInit {
       this.selectedCategories.splice(index + 1, this.selectedCategories.length - index - 1);
     }
 
-    if (this.getSubCategories(this.selectedCategories[index]).length > 0) {
+    if (this.getSubCategories(this.selectedCategories[index]).length > 0 && this.categoryOptions[index + 1].length > 0) {
       this.addCategory();
     }
   }
-
   getSubCategories(parentCategoryId: number | null): CategoryWithParent[] {
     return this.allCategories
       .filter(category => category.parentCategoryId == parentCategoryId)
@@ -108,31 +106,49 @@ export class CategoriesPageComponent implements OnInit {
   protected readonly environment = environment;
 
   onSubmit() {
-    this.categoryForm.patchValue({
-      parent_id: this.selectedCategories[this.selectedCategories.length - 1]
-    });
-
-    let formCopy = { ...this.categoryForm.value };
-
-    delete formCopy.categoriesForm;
-
-    const category = this.allCategories.find(category => category.id === formCopy.categoryId);
-
-    if (category && category.containsCategories) {
-      this.toasterService.error('You cannot select a category that contains subcategories');
-      return;
-    }
-
-    if (this.isUpdate) {
-      delete formCopy.containsCategories;
-      delete formCopy.parent_id;
-      this.updateCategory(formCopy);
-      return;
-    }
+    console.log('Form value:', this.categoryForm.value);
+    console.log('Form errors:', this.categoryForm.errors);
 
     if (this.categoryForm.valid) {
-      this.submitForm(formCopy);
+
+      let parentId: number | null = this.selectedCategories[this.selectedCategories.length - 1];
+      if (parentId === null) {
+        this.categoryForm.patchValue({
+          parent_id: null
+        });
+      } else {
+        this.categoryForm.patchValue({
+          parent_id: parentId
+        });
+      }
+
+
+      let formCopy = { ...this.categoryForm.value };
+
+      formCopy.containsCategories = formCopy.containsCategories === 'true' || formCopy.containsCategories === true;
+
+      formCopy.parent_id = formCopy.parent_id === 'null' ? null : Number(formCopy.parent_id);
+
+      delete formCopy.categoriesForm;
+
+
+      const category = this.allCategories.find(category => category.id === formCopy.categoryId);
+
+      if (category && category.containsCategories) {
+        this.toasterService.error('You cannot select a category that contains subcategories');
+        return;
+      }
+
+      if (this.isUpdate) {
+        delete formCopy.containsCategories;
+        delete formCopy.parent_id;
+        this.updateCategory(formCopy);
+        return;
+      }
+
+        this.submitForm(formCopy);
     } else {
+      console.log("not valid")
       this.categoryForm.markAllAsTouched();
     }
   }
@@ -141,7 +157,9 @@ export class CategoriesPageComponent implements OnInit {
     const formData = new FormData();
     formData.append('icon', this.categoryForm.get('icon')?.value);
     for (const key in form) {
-      formData.append(key, form[key]);
+      if (form[key] !== null) {
+        formData.append(key, form[key]);
+      }
     }
 
     this.categoryService.updateCategory(formData, this.categoryId!).subscribe(
@@ -152,6 +170,9 @@ export class CategoriesPageComponent implements OnInit {
           );
           this.categoryForm.reset();
           this.toasterService.success("Category has been updated");
+          this.router.navigateByUrl('/dummy', { skipLocationChange: true }).then(() => {
+            this.router.navigate(['/admin/categories']);
+          });
           this.isUpdate = false;
         }
       }, error => {
@@ -159,13 +180,14 @@ export class CategoriesPageComponent implements OnInit {
       }
     );
   }
-
   submitForm(formCopy: any) {
     if (this.categoryForm.valid) {
       const formData = new FormData();
       formData.append('icon', this.categoryForm.get('icon')?.value);
       for (const key in formCopy) {
-        formData.append(key, formCopy[key]);
+        if (formCopy[key] !== null) {
+          formData.append(key, formCopy[key]);
+        }
       }
 
       this.categoryService.createCategory(formData).subscribe(
@@ -174,14 +196,15 @@ export class CategoriesPageComponent implements OnInit {
             this.allCategories.push(data.data);
             this.categoryForm.reset();
             this.toasterService.success("Category has been created");
-          }
+            this.router.navigateByUrl('/dummy', { skipLocationChange: true }).then(() => {
+              this.router.navigate(['/admin/categories']);
+            });          }
         }, error => {
           this.toasterService.error(error.error);
         }
       );
     }
   }
-
 
   loadCategories() {
     this.categoryService.loadCategories().subscribe(
