@@ -61,11 +61,11 @@ export const environment={
   },
 
   services:{
-    courseCreationService:"http://24.144.78.66/coursecreation",
-    enrollmentService:"http://24.144.78.66/courseenrollment",
+    courseCreationService:"http://24.144.78.66/coursecreation/",
+    enrollmentService:"http://24.144.78.66/courseenrollment/",
     authenticationService:"http://24.144.78.66/auth/",
-    skillService:"http://24.144.78.66/skillsmanagement",
-    profileManagementService:"http://24.144.78.66/profilemanagement",
+    skillService:"http://24.144.78.66/skillsmanagement/",
+    profileManagementService:"http://24.144.78.66/profilemanagement/",
 
   },
 
