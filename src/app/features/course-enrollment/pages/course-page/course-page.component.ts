@@ -99,6 +99,14 @@ export class CoursePageComponent implements OnInit{
     return this.sanitizer.bypassSecurityTrustHtml(htmlContent);
   }
 
+  renderAdvice(advice: string): SafeHtml {
+    console.log('Advice content before parsing:', advice);
+    const parsed = this.parseMarkdown(advice);
+    console.log('Advice content after parsing:', parsed);
+    return parsed;
+  }
+
+
 
 
   ngOnInit() {

@@ -143,7 +143,10 @@ export class CourseDetailsPageComponent implements OnInit {
   enrollCourse() {
     this.enrollingService.enrollCourse(this.courseDetails.id).subscribe(
       data => {
+        console.log("hellooooooo")
         if (data.data) {
+          console.log("hellooooooo")
+          console.log(data.data);
           this.router.navigate(["/enrollment/" + data.data]);
           this.toastService.success("course has been enrolled");
           this.loadEnrolledCourses();

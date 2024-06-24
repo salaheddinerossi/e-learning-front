@@ -136,7 +136,7 @@
             Quizzes
           </h1>
           <h2 class="text-body-color">
-            browse categories and find what are you looking for
+            View the quizzes bellow
           </h2>
         </div>
       </div>
@@ -152,9 +152,8 @@
               <h1 class="text-white text-lg" *ngIf="!quiz.isPassed">Here are some advices:</h1>
               <h1 class="text-white text-lg" *ngIf="quiz.isPassed">Here are some advices to expand your knowledge:</h1>
               <div class="ml-2">
-                <h2 class="text-white my-2 text-sm" *ngFor="let advice of quiz.advices">{{advice}}</h2>
+                <h2 class="text-white my-2 text-sm markdown-content" *ngFor="let advice of quiz.advices" [innerHTML]="renderAdvice(advice)"></h2>
               </div>
-
               <h1 *ngIf="quiz.isPassed==false" class="my-6 text-white text-lg">Try the quiz again:</h1>
             </div>
 
@@ -173,7 +172,7 @@
               <h1 class="text-white text-lg" *ngIf="!quiz.isPassed">Here are some advices:</h1>
               <h1 class="text-white text-lg" *ngIf="quiz.isPassed">Here are some advices to expand your knowledge:</h1>
               <div class="ml-2">
-                <h2 class="text-white my-2 text-sm" *ngFor="let advice of quiz.advices">{{advice}}</h2>
+                <h2 class="text-white my-2 text-sm markdown-content" *ngFor="let advice of quiz.advices" [innerHTML]="renderAdvice(advice)"></h2>
               </div>
               <h1 *ngIf="quiz.isPassed==false" class="my-6 text-white text-lg">Try the quiz again:</h1>
             </div>
@@ -192,7 +191,7 @@
               <h1 class="text-white text-lg" *ngIf="!quiz.isPassed">Here are some advices:</h1>
               <h1 class="text-white text-lg" *ngIf="quiz.isPassed">Here are some advices to expand your knowledge:</h1>
               <div class="ml-2">
-                <h2 class="text-white my-2 text-sm" *ngFor="let advice of quiz.advices">{{advice}}</h2>
+                <h2 class="text-white my-2 text-sm markdown-content" *ngFor="let advice of quiz.advices" [innerHTML]="renderAdvice(advice)"></h2>
               </div>
               <h1 *ngIf="quiz.isPassed==false" class="my-6 text-white text-lg">Try the quiz again:</h1>
             </div>

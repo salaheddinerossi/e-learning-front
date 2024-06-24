@@ -252,7 +252,13 @@ export class Step1PageComponent implements OnInit {
 
   submitForm(formCopy: any) {
     if (this.courseForm.valid) {
-      this.courseCreationService.createCourse(formCopy).subscribe(
+      const formData = new FormData();
+      formData.append('image', this.selectedFile!);
+      for (const key in formCopy) {
+        formData.append(key, formCopy[key]);
+      }
+
+      this.courseCreationService.createCourse(formData).subscribe(
         data => {
           this.router.navigate(['/step2/' + data.data.id]);
           this.toastr.success("Course created");

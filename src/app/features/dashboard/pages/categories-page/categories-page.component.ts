@@ -109,7 +109,6 @@ export class CategoriesPageComponent implements OnInit {
     console.log('Form value:', this.categoryForm.value);
     console.log('Form errors:', this.categoryForm.errors);
 
-    if (this.categoryForm.valid) {
 
       let parentId: number | null = this.selectedCategories[this.selectedCategories.length - 1];
       if (parentId === null) {
@@ -145,7 +144,7 @@ export class CategoriesPageComponent implements OnInit {
         this.updateCategory(formCopy);
         return;
       }
-
+    if (this.categoryForm.valid) {
         this.submitForm(formCopy);
     } else {
       console.log("not valid")
