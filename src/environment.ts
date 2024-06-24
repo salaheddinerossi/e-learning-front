@@ -61,11 +61,11 @@ export const environment={
   },
 
   services:{
-    courseCreationService:"http://localhost:8082/",
-    enrollmentService:"http://localhost:8084/",
-    authenticationService:"http://localhost:8080/",
-    skillService:"http://localhost:8083/",
-    profileManagementService:"http://localhost:8081/",
+    courseCreationService:"http://146.190.29.184:8082/",
+    enrollmentService:"http://146.190.29.184:8084/",
+    authenticationService:"http://146.190.29.184:8080/",
+    skillService:"http://146.190.29.184:8083/",
+    profileManagementService:"http://146.190.29.184:8081/",
 
   },
 
